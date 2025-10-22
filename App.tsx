@@ -32,7 +32,7 @@ export default function App() {
         />
       </View>
 
-      <View className="flex-1">{tab === 'schedule' ? <ScheduleList /> : <SpeakersList />}</View>
+      <View className="flex-1 pb-16">{tab === 'schedule' ? <ScheduleList /> : <SpeakersList />}</View>
 
       <BottomTabBar tab={tab} setTab={handleSetTab} />
 
@@ -50,7 +50,7 @@ const BottomTabBar = ({
   setTab: (t: 'schedule' | 'speakers') => void;
 }) => {
   return (
-    <View className="absolute bottom-4 pb-5 left-4 right-4">
+    <View className="absolute bottom-4 pb-1 left-4 right-4">
       <View className="mx-2 bg-[#e97b35] flex-row justify-around rounded-full py-2 shadow-lg">
         <TabItem
           label="Schedule"
@@ -94,6 +94,6 @@ const TabItem = ({
 }) => (
   <TouchableOpacity onPress={onPress} className="items-center gap-1 px-3 py-1" accessibilityRole="button">
     {icon(active)}
-    <Text className={`${active ? '#fff' : '#fff'} text-xs font-medium`}>{label}</Text>
+    <Text className={`${active ? '#fff' : '#000'} text-xs font-medium`}>{label}</Text>
   </TouchableOpacity>
 );

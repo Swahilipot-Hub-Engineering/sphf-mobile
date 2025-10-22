@@ -17,7 +17,7 @@ export type LoaderProps = {
 };
 
 export const Loader = ({ visible, message, fullscreen = true, size = 'large' }: LoaderProps) => {
-  // Map RN ActivityIndicator sizes to pixel dimensions for the image
+  // Mapping RN ActivityIndicator sizes to pixel dimensions for the image
   const dim = size === 'small' ? 40 : 64;
 
   // Rotation animation setup
