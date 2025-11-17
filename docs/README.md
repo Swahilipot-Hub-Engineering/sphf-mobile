@@ -32,4 +32,4 @@ Below are screenshots demonstrating the app's main screens.
 
 ---
 
-If you add or rename images, update the paths above so they remain relative to `docs/README.md`.
+>If you add or rename images, update the paths above so they remain relative to `docs/README.md`.
