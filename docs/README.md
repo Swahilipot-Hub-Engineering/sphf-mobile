@@ -8,27 +8,35 @@ Below are screenshots demonstrating the app's main screens.
 
 ### Landing
 
-![Landing](assets/images/landing.PNG)
+<img src="assets/images/landing.PNG" alt="Landing" width="320" />
 
 ### Home / SPHF
 
-![SPHF Home](assets/images/sphf.PNG)
+<img src="assets/images/sphf.PNG" alt="SPHF Home" width="320" />
 
 ### FM
 
-![FM](assets/images/fm.PNG)
+<img src="assets/images/fm.PNG" alt="FM" width="320" />
+
+#### FM Playback (Mini Player)
+
+<img src="assets/images/fm-play.png" alt="FM Playback" width="320" />
+
+#### FM Playback (Playing)
+
+<img src="assets/images/fm-play1.png" alt="FM Playback Active" width="320" />
 
 ### Events
 
-![Events](assets/images/events.PNG)
+<img src="assets/images/events.PNG" alt="Events" width="320" />
 
 ### Socials
 
-![Socials](assets/images/socials.PNG)
+<img src="assets/images/socials.PNG" alt="Socials" width="320" />
 
 ### Profile
 
-![Profile](assets/images/profile.PNG)
+<img src="assets/images/profile.PNG" alt="Profile" width="320" />
 
 ---
 
