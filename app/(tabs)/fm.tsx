@@ -1,14 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { V_PADDING, H_PADDING, GAP } from '.';
 
 import { FM_STREAM, useAudioPlayer } from '@/components/AudioPlayer';
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
+
+// Define a type for the schedule item
+type ScheduleItem = {
+  time: string;
+  monday: string;
+  tuesday: string;
+  wednesday: string;
+  thursday: string;
+  friday: string;
+  saturday: string;
+  sunday: string;
+};
 
 export default function FmScreen() {
   const { currentTrack, isPlaying, isLoading, togglePlayback, stop } = useAudioPlayer();
   const isCurrentStream = currentTrack?.id === FM_STREAM.id;
   const playingLive = isCurrentStream && isPlaying;
+
+  const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
+  const [scheduleLoading, setScheduleLoading] = useState(true);
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      setScheduleLoading(true);
+      setScheduleError(null);
+      try {
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Mock schedule data based on the structure observed from the URL
+        const mockSchedule: ScheduleItem[] = [
+          { time: '00:00 - 06:00', monday: 'Night Shift', tuesday: 'Night Shift', wednesday: 'Night Shift', thursday: 'Night Shift', friday: 'Night Shift', saturday: 'Night Shift', sunday: 'Night Shift' },
+          { time: '06:00 - 10:00', monday: 'Morning Tide', tuesday: 'Morning Tide', wednesday: 'Morning Tide', thursday: 'Morning Tide', friday: 'Morning Tide', saturday: 'Weekend Warmup', sunday: 'Sunday Gospel' },
+          { time: '10:00 - 14:00', monday: 'Midday Groove', tuesday: 'Midday Groove', wednesday: 'Midday Groove', thursday: 'Midday Groove', friday: 'Midday Groove', saturday: 'Saturday Mix', sunday: 'Inspirational Hour' },
+          { time: '14:00 - 18:00', monday: 'Afternoon Drive', tuesday: 'Afternoon Drive', wednesday: 'Afternoon Drive', thursday: 'Afternoon Drive', friday: 'Afternoon Drive', saturday: 'Sports Zone', sunday: 'Culture Special' },
+          { time: '18:00 - 22:00', monday: 'Evening Chill', tuesday: 'Evening Chill', wednesday: 'Evening Chill', thursday: 'Evening Chill', friday: 'Evening Chill', saturday: 'Nightlife Beats', sunday: 'Relaxation Sounds' },
+          { time: '22:00 - 00:00', monday: 'Late Night Talk', tuesday: 'Late Night Talk', wednesday: 'Late Night Talk', thursday: 'Late Night Talk', friday: 'Late Night Talk', saturday: 'Midnight Stories', sunday: 'Calm Reflections' },
+        ];
+        setSchedule(mockSchedule);
+      } catch (err) {
+        console.error("Failed to fetch schedule:", err);
+        setScheduleError("Failed to load schedule. Please try again later.");
+      } finally {
+        setScheduleLoading(false);
+      }
+    };
+
+    fetchSchedule();
+  }, []);
+
 
   const statusCopy = isLoading
     ? 'Connecting to the studio feed...'
@@ -25,6 +72,8 @@ export default function FmScreen() {
   const handleStop = () => {
     void stop();
   };
+
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
 
   return (
     <ThemedView style={styles.container}>
@@ -87,10 +136,25 @@ export default function FmScreen() {
       </View>
 
       <View style={styles.card}>
-        <ThemedText style={styles.cardTitle}>Shows</ThemedText>
-        <ThemedText style={styles.cardBody}>
-          Catch the Morning Tide, Coastline Countdown, and weekend culture specials live right here soon.
-        </ThemedText>
+        <ThemedText style={styles.cardTitle}>Today's Schedule</ThemedText>
+        {scheduleLoading ? (
+          <ActivityIndicator size="small" color="#475569" />
+        ) : scheduleError ? (
+          <ThemedText style={styles.errorText}>{scheduleError}</ThemedText>
+        ) : schedule.length > 0 ? (
+          <View style={styles.scheduleContainer}>
+            {schedule.map((item, index) => (
+              <View key={index} style={styles.scheduleItem}>
+                <ThemedText style={styles.scheduleTime}>{item.time}</ThemedText>
+                <ThemedText style={styles.scheduleShow}>
+                  {item[today as keyof ScheduleItem] || 'No show'}
+                </ThemedText>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <ThemedText style={styles.cardBody}>No schedule available.</ThemedText>
+        )}
       </View>
     </ThemedView>
   );
@@ -98,9 +162,9 @@ export default function FmScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
-    gap: 16,
+    paddingHorizontal: H_PADDING,
+    paddingVertical: V_PADDING,
+    rowGap: GAP,
   },
   title: {
     fontSize: 24,
@@ -201,5 +265,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#b91c1c',
+  },
+  scheduleContainer: {
+    gap: 8,
+  },
+  scheduleItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+  },
+  scheduleTime: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#475569',
+    flexBasis: '35%',
+  },
+  scheduleShow: {
+    fontSize: 14,
+    color: '#1e293b',
+    flexBasis: '60%',
+    textAlign: 'right',
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#ef4444',
   },
 });

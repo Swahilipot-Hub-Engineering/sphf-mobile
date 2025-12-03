@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-
+import { V_PADDING, H_PADDING, GAP } from '.';
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
 import React from 'react';
 
@@ -22,9 +22,9 @@ export default function EventsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
-    gap: 16,
+    paddingHorizontal: H_PADDING,
+    paddingVertical: V_PADDING,
+    rowGap: GAP,
   },
   title: {
     fontSize: 24,
