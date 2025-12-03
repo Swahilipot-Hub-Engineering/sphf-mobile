@@ -6,21 +6,9 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
 
-const TABS = [
-  { id: 'fm', title: 'Swahilipot FM', summary: 'Listen to shows and live streams.', href: '/fm' },
-  {
-    id: 'foundation',
-    title: 'Swahilipot Foundation',
-    summary: 'Programs, community, and youth initiatives.',
-    href: '/foundation',
-  },
-  { id: 'socials', title: 'Socials', summary: 'Meetups, updates, and conversations.', href: '/socials' },
-  { id: 'events', title: 'Events', summary: 'Schedules and happenings across the hub.', href: '/events' },
-  { id: 'profile', title: 'Profile', summary: 'Manage your account and preferences.', href: '/profile' },
-] as const;
-
-const H_PADDING = 16;
-const GAP = 12;
+export const H_PADDING = 16;
+export const V_PADDING = 70;
+export const GAP = 12;
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -46,16 +34,11 @@ export default function HomeScreen() {
           <View style={styles.header}>
             <View style={styles.topBar}>
               <Image source={require('@/assets/images/sph-logo.png')} style={styles.logo} />
-              <Link href="/profile" asChild>
-                <Pressable hitSlop={8}>
-                  <FontAwesome name="user-circle" size={28} />
-                </Pressable>
-              </Link>
             </View>
-            <ThemedText style={styles.overline}>Swahilipot Hb Foundation App</ThemedText>
             <ThemedText style={styles.title}>Choose where to go</ThemedText>
             <ThemedText style={styles.subtitle}>
-              Pick a module to jump into. You can always return here from the Home tab.
+              Pick a module to jump into. You can always return here 
+              from the Home tab.
             </ThemedText>
             <View style={styles.infoCard}>
               <ThemedText style={styles.infoTitle}>Key information</ThemedText>
@@ -78,20 +61,6 @@ export default function HomeScreen() {
             </View>
           </View>
         }
-        data={TABS}
-        keyExtractor={(item) => item.id}
-        numColumns={columns}
-        columnWrapperStyle={columns > 1 ? { columnGap: GAP } : undefined}
-        renderItem={({ item }) => (
-          <View style={[styles.item, { width: cardWidth }]}>
-            <Link href={item.href} asChild>
-              <Pressable style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}>
-                <ThemedText style={styles.cardTitle}>{item.title}</ThemedText>
-                <ThemedText style={styles.cardBody}>{item.summary}</ThemedText>
-              </Pressable>
-            </Link>
-          </View>
-        )}
         ItemSeparatorComponent={() => <View style={{ height: GAP }} />}
         showsVerticalScrollIndicator={false}
       />
@@ -105,7 +74,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: H_PADDING,
-    paddingVertical: 16,
+    paddingVertical: V_PADDING,
     rowGap: GAP,
   },
   header: {
@@ -118,8 +87,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 300,
+    height: 50,
     borderRadius: 8,
   },
   infoCard: {

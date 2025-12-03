@@ -2,7 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 
-import Colors from '@/constants/Colors';
+// import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
@@ -17,13 +17,18 @@ export default function TabLayout() {
     <Tabs
       initialRouteName="index"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: 'rgb(48, 110, 183)',
+        tabBarInactiveTintColor: 'rgb(48, 110, 183)',
         headerShown: useClientOnlyValue(false, true),
+        tabBarStyle: {
+          backgroundColor: 'white',
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Swahilipot Hb Foundation App',
+          title: 'Home',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
@@ -31,6 +36,7 @@ export default function TabLayout() {
         name="fm"
         options={{
           title: 'FM',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="podcast" color={color} />,
         }}
       />
@@ -38,28 +44,24 @@ export default function TabLayout() {
         name="foundation"
         options={{
           title: 'Foundation',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="building" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="socials"
-        options={{
-          title: 'Socials',
-          tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
         }}
       />
       <Tabs.Screen
         name="events"
         options={{
           title: 'Events',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="settings"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user-circle" color={color} />,
+          title: 'Settings',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
         }}
       />
     </Tabs>
