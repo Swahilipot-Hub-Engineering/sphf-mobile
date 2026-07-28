@@ -17,7 +17,7 @@ license: MIT
 
 ## Beta/Preview Releases
 
-Beta versions use `.preview` suffix (e.g., `55.0.0-preview.2`), published under `@next` tag.
+Beta versions use `-preview` suffix (e.g., `55.0.0-preview.2`), published under `@next` tag.
 
 Check if latest is beta: https://exp.host/--/api/v2/versions (look for `-preview` in `expoVersion`)
 
