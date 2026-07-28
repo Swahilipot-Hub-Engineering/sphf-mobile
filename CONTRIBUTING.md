@@ -68,5 +68,6 @@ The `main` branch is protected. Every change must:
 3. Receive at least one approving review from someone other than the pull request
    author.
 
-After these requirements are met, the authorized maintainer `achingachris` can merge
-the pull request.
+The authorized maintainer `achingachris` may merge a pull request without a separate
+approval. This exception applies only through a pull request; direct pushes to `main`
+remain blocked, and the code-quality workflow must pass.

@@ -86,7 +86,8 @@ docs/         Screenshots and detailed running instructions
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Changes to
 `main` must be submitted through a pull request, pass the code-quality workflow, and
-receive at least one approving review.
+receive at least one approving review. Pull requests merged by the authorized
+maintainer `achingachris` may bypass the review requirement, but must still pass CI.
 
 ## License
 
