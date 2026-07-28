@@ -74,9 +74,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   const resolveSafeStreamUrl = useCallback((url: string) => {
     const parsedUrl = new URL(url);
     if (parsedUrl.protocol !== 'https:') {
-      throw new StreamValidationError(
-        `Stream URL protocol must be HTTPS, got: ${parsedUrl.protocol}`
-      );
+      throw new StreamValidationError('Stream URL protocol must be HTTPS.');
     }
     parsedUrl.searchParams.delete('_ga');
     return parsedUrl.toString();
@@ -130,7 +128,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         console.warn('Failed to start Swahilipot FM stream', error);
         setPlaybackError(
           error instanceof StreamValidationError
-            ? 'Invalid stream configuration. Please contact support.'
+            ? 'Stream configuration is invalid. Please try again later.'
             : 'Stream connection failed. Please try again in a moment.'
         );
       }
