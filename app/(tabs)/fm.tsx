@@ -33,21 +33,75 @@ export default function FmScreen() {
       setScheduleError(null);
       try {
         // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Mock schedule data based on the structure observed from the URL
         const mockSchedule: ScheduleItem[] = [
-          { time: '00:00 - 06:00', monday: 'Night Shift', tuesday: 'Night Shift', wednesday: 'Night Shift', thursday: 'Night Shift', friday: 'Night Shift', saturday: 'Night Shift', sunday: 'Night Shift' },
-          { time: '06:00 - 10:00', monday: 'Morning Tide', tuesday: 'Morning Tide', wednesday: 'Morning Tide', thursday: 'Morning Tide', friday: 'Morning Tide', saturday: 'Weekend Warmup', sunday: 'Sunday Gospel' },
-          { time: '10:00 - 14:00', monday: 'Midday Groove', tuesday: 'Midday Groove', wednesday: 'Midday Groove', thursday: 'Midday Groove', friday: 'Midday Groove', saturday: 'Saturday Mix', sunday: 'Inspirational Hour' },
-          { time: '14:00 - 18:00', monday: 'Afternoon Drive', tuesday: 'Afternoon Drive', wednesday: 'Afternoon Drive', thursday: 'Afternoon Drive', friday: 'Afternoon Drive', saturday: 'Sports Zone', sunday: 'Culture Special' },
-          { time: '18:00 - 22:00', monday: 'Evening Chill', tuesday: 'Evening Chill', wednesday: 'Evening Chill', thursday: 'Evening Chill', friday: 'Evening Chill', saturday: 'Nightlife Beats', sunday: 'Relaxation Sounds' },
-          { time: '22:00 - 00:00', monday: 'Late Night Talk', tuesday: 'Late Night Talk', wednesday: 'Late Night Talk', thursday: 'Late Night Talk', friday: 'Late Night Talk', saturday: 'Midnight Stories', sunday: 'Calm Reflections' },
+          {
+            time: '00:00 - 06:00',
+            monday: 'Night Shift',
+            tuesday: 'Night Shift',
+            wednesday: 'Night Shift',
+            thursday: 'Night Shift',
+            friday: 'Night Shift',
+            saturday: 'Night Shift',
+            sunday: 'Night Shift',
+          },
+          {
+            time: '06:00 - 10:00',
+            monday: 'Morning Tide',
+            tuesday: 'Morning Tide',
+            wednesday: 'Morning Tide',
+            thursday: 'Morning Tide',
+            friday: 'Morning Tide',
+            saturday: 'Weekend Warmup',
+            sunday: 'Sunday Gospel',
+          },
+          {
+            time: '10:00 - 14:00',
+            monday: 'Midday Groove',
+            tuesday: 'Midday Groove',
+            wednesday: 'Midday Groove',
+            thursday: 'Midday Groove',
+            friday: 'Midday Groove',
+            saturday: 'Saturday Mix',
+            sunday: 'Inspirational Hour',
+          },
+          {
+            time: '14:00 - 18:00',
+            monday: 'Afternoon Drive',
+            tuesday: 'Afternoon Drive',
+            wednesday: 'Afternoon Drive',
+            thursday: 'Afternoon Drive',
+            friday: 'Afternoon Drive',
+            saturday: 'Sports Zone',
+            sunday: 'Culture Special',
+          },
+          {
+            time: '18:00 - 22:00',
+            monday: 'Evening Chill',
+            tuesday: 'Evening Chill',
+            wednesday: 'Evening Chill',
+            thursday: 'Evening Chill',
+            friday: 'Evening Chill',
+            saturday: 'Nightlife Beats',
+            sunday: 'Relaxation Sounds',
+          },
+          {
+            time: '22:00 - 00:00',
+            monday: 'Late Night Talk',
+            tuesday: 'Late Night Talk',
+            wednesday: 'Late Night Talk',
+            thursday: 'Late Night Talk',
+            friday: 'Late Night Talk',
+            saturday: 'Midnight Stories',
+            sunday: 'Calm Reflections',
+          },
         ];
         setSchedule(mockSchedule);
       } catch (err) {
-        console.error("Failed to fetch schedule:", err);
-        setScheduleError("Failed to load schedule. Please try again later.");
+        console.error('Failed to fetch schedule:', err);
+        setScheduleError('Failed to load schedule. Please try again later.');
       } finally {
         setScheduleLoading(false);
       }
@@ -55,7 +109,6 @@ export default function FmScreen() {
 
     fetchSchedule();
   }, []);
-
 
   const statusCopy = isLoading
     ? 'Connecting to the studio feed...'
@@ -101,42 +154,44 @@ export default function FmScreen() {
               pressed ? styles.buttonPressed : null,
             ]}
             accessibilityRole="button"
-            accessibilityLabel={playingLive ? 'Pause Swahilipot FM stream' : 'Play Swahilipot FM stream'}
+            accessibilityLabel={
+              playingLive ? 'Pause Swahilipot FM stream' : 'Play Swahilipot FM stream'
+            }
             onPress={handlePrimaryAction}
-            disabled={isLoading}
-          >
+            disabled={isLoading}>
             {isLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
               <Ionicons name={playingLive ? 'pause' : 'play'} size={20} color="#fff" />
             )}
-            <ThemedText style={styles.primaryButtonLabel}>{playingLive ? 'Pause' : 'Play'}</ThemedText>
+            <ThemedText style={styles.primaryButtonLabel}>
+              {playingLive ? 'Pause' : 'Play'}
+            </ThemedText>
           </Pressable>
 
           <Pressable
             style={({ pressed }) => [
               styles.secondaryButton,
-              (!isCurrentStream || isLoading) ? styles.secondaryButtonDisabled : null,
+              !isCurrentStream || isLoading ? styles.secondaryButtonDisabled : null,
               pressed ? styles.buttonPressed : null,
             ]}
             accessibilityRole="button"
             accessibilityLabel="Stop Swahilipot FM stream"
             onPress={handleStop}
-            disabled={!isCurrentStream || isLoading}
-          >
+            disabled={!isCurrentStream || isLoading}>
             <Ionicons name="stop" size={18} color="#0f172a" />
             <ThemedText style={styles.secondaryButtonLabel}>Stop</ThemedText>
           </Pressable>
         </View>
 
         <ThemedText style={styles.helperText}>
-          Audio continues playing while you browse other tabs or switch apps. Use the floating mini player for quick access
-          anywhere.
+          Audio continues playing while you browse other tabs or switch apps. Use the floating mini
+          player for quick access anywhere.
         </ThemedText>
       </View>
 
       <View style={styles.card}>
-        <ThemedText style={styles.cardTitle}>Today's Schedule</ThemedText>
+        <ThemedText style={styles.cardTitle}>Today&apos;s Schedule</ThemedText>
         {scheduleLoading ? (
           <ActivityIndicator size="small" color="#475569" />
         ) : scheduleError ? (

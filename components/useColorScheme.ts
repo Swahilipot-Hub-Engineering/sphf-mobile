@@ -1,3 +1,3 @@
-export function useColorScheme() {
-    return 'light';
+export function useColorScheme(): 'light' | 'dark' {
+  return 'light';
 }
