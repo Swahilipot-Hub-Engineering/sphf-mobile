@@ -52,7 +52,7 @@ function formatErrors(errors) {
     .join('\n');
 }
 
-if (import.meta.main) {
+if (process.argv[1] === decodeURI(new URL(import.meta.url).pathname)) {
   const args = process.argv.slice(2);
   const files = args.filter((a) => !a.startsWith('-'));
 
