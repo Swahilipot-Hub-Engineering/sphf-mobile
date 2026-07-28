@@ -121,13 +121,15 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   }, [player]);
 
   const stop = useCallback(async () => {
-    player.pause();
     try {
+      player.pause();
       await player.seekTo(0);
     } catch (error) {
       console.warn('Unable to reset stream progress', error);
     }
-    player.replace(null);
+    // Note: player.replace(null) is intentionally avoided — the iOS native
+    // module cannot cast null to AudioSource and throws. Clearing
+    // currentTrack makes the next play() reload the stream source instead.
     setCurrentTrack(null);
     setIsLoading(false);
   }, [player]);
