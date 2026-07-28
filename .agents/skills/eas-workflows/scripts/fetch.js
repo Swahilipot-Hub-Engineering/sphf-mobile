@@ -92,7 +92,7 @@ function parseMaxAge(cacheControl) {
   return match ? parseInt(match[1], 10) : null;
 }
 
-if (import.meta.main) {
+if (process.argv[1] === decodeURI(new URL(import.meta.url).pathname)) {
   const url = process.argv[2];
 
   if (!url || url === '--help' || url === '-h') {
