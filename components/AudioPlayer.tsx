@@ -30,6 +30,7 @@ type PlayerContextValue = {
   status: AudioStatus | null;
   isLoading: boolean;
   isPlaying: boolean;
+  playbackError: string | null;
   play: (track?: StreamTrack) => Promise<void>;
   pause: () => Promise<void>;
   stop: () => Promise<void>;
@@ -41,7 +42,7 @@ export const FM_STREAM: StreamTrack = {
   title: 'Swahilipot FM',
   subtitle: 'Live coastal stories, music, and culture.',
   description: '24/7 stream direct from Swahilipot FM studios.',
-  url: 'https://swahilipotfm.out.airtime.pro/swahilipotfm_a?_ga=2.140975346.1118176404.1720613685-1678527295.1702105127',
+  url: 'https://swahilipotfm.out.airtime.pro/swahilipotfm_a',
 };
 
 const noop = async () => {};
@@ -51,6 +52,7 @@ const defaultPlayerContext: PlayerContextValue = {
   status: null,
   isLoading: false,
   isPlaying: false,
+  playbackError: null,
   play: noop,
   pause: noop,
   stop: noop,
@@ -63,8 +65,18 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   const audioConfiguredRef = useRef(false);
   const [currentTrack, setCurrentTrack] = useState<StreamTrack | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [playbackError, setPlaybackError] = useState<string | null>(null);
   const player = useExpoAudioPlayer(null, { updateInterval: 1000, keepAudioSessionActive: true });
   const status = useAudioPlayerStatus(player);
+
+  const resolveSafeStreamUrl = useCallback((url: string) => {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.protocol !== 'https:') {
+      throw new Error('Swahilipot FM stream must use HTTPS.');
+    }
+    parsedUrl.searchParams.delete('_ga');
+    return parsedUrl.toString();
+  }, []);
 
   const ensureAudioMode = useCallback(async () => {
     if (Platform.OS === 'web' || audioConfiguredRef.current) {
@@ -100,20 +112,23 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
       const targetTrack = track ?? currentTrack ?? FM_STREAM;
       setCurrentTrack(targetTrack);
       setIsLoading(true);
+      setPlaybackError(null);
       try {
         await ensureAudioMode();
         const needsSource = currentTrack?.id !== targetTrack.id || !status?.isLoaded;
         if (needsSource) {
-          player.replace({ uri: targetTrack.url });
+          player.replace({ uri: resolveSafeStreamUrl(targetTrack.url) });
         }
         if (!status?.playing) {
           player.play();
         }
       } catch (error) {
         console.warn('Failed to start Swahilipot FM stream', error);
+        setPlaybackError('Unable to start live stream. Please try again in a moment.');
+        setIsLoading(false);
       }
     },
-    [currentTrack, ensureAudioMode, player, status?.isLoaded, status?.playing]
+    [currentTrack, ensureAudioMode, player, resolveSafeStreamUrl, status?.isLoaded, status?.playing]
   );
 
   const pause = useCallback(async () => {
@@ -132,6 +147,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
     // currentTrack makes the next play() reload the stream source instead.
     setCurrentTrack(null);
     setIsLoading(false);
+    setPlaybackError(null);
   }, [player]);
 
   const togglePlayback = useCallback(
@@ -151,12 +167,13 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
       status,
       isLoading,
       isPlaying: !!status?.playing,
+      playbackError,
       play,
       pause,
       stop,
       togglePlayback,
     }),
-    [currentTrack, status, isLoading, play, pause, stop, togglePlayback]
+    [currentTrack, status, isLoading, playbackError, play, pause, stop, togglePlayback]
   );
 
   return <AudioPlayerContext.Provider value={contextValue}>{children}</AudioPlayerContext.Provider>;

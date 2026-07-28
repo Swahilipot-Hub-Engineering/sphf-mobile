@@ -19,7 +19,8 @@ type ScheduleItem = {
 };
 
 export default function FmScreen() {
-  const { currentTrack, isPlaying, isLoading, togglePlayback, stop } = useAudioPlayer();
+  const { currentTrack, isPlaying, isLoading, playbackError, togglePlayback, stop } =
+    useAudioPlayer();
   const isCurrentStream = currentTrack?.id === FM_STREAM.id;
   const playingLive = isCurrentStream && isPlaying;
 
@@ -110,13 +111,15 @@ export default function FmScreen() {
     fetchSchedule();
   }, []);
 
-  const statusCopy = isLoading
-    ? 'Connecting to the studio feed...'
-    : playingLive
-      ? 'Live — Swahilipot FM'
-      : isCurrentStream
-        ? 'Stream idle. Tap play to listen live.'
-        : 'Another audio source is active. Stop it to tune in here.';
+  const statusCopy = playbackError
+    ? playbackError
+    : isLoading
+      ? 'Connecting to the studio feed...'
+      : playingLive
+        ? 'Live — Swahilipot FM'
+        : isCurrentStream
+          ? 'Stream idle. Tap play to listen live.'
+          : 'Another audio source is active. Stop it to tune in here.';
 
   const handlePrimaryAction = () => {
     void togglePlayback(FM_STREAM);
@@ -144,7 +147,9 @@ export default function FmScreen() {
           ) : null}
         </View>
 
-        <ThemedText style={styles.cardBody}>{statusCopy}</ThemedText>
+        <ThemedText style={[styles.cardBody, playbackError ? styles.errorText : null]}>
+          {statusCopy}
+        </ThemedText>
 
         <View style={styles.controls}>
           <Pressable
