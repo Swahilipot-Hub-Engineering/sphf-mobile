@@ -70,7 +70,7 @@ export function useSearch(options: any = {}) {
       headerShown: true,
       headerSearchBarOptions: {
         ...options,
-        onChangeText(e: any) {
+        onChangeText(e: { nativeEvent: { text: string } }) {
           setSearch(e.nativeEvent.text);
           options.onChangeText?.(e);
         },
