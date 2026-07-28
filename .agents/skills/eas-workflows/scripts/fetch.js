@@ -5,7 +5,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import process from 'node:process';
 
-const CACHE_DIRECTORY = resolve(import.meta.dirname, '.cache');
+const CACHE_DIRECTORY = resolve(decodeURI(new URL('.', import.meta.url).pathname), '.cache');
 const DEFAULT_TTL_SECONDS = 15 * 60; // 15 minutes
 
 export async function fetchCached(url) {
