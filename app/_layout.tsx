@@ -12,6 +12,8 @@ import PlayerProvider from '@/components/AudioPlayer';
 import FloatingPlayer from '@/components/FloatingPlayer';
 import { useColorScheme } from '@/components/useColorScheme';
 
+import '../global.css';
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -58,6 +60,7 @@ function RootLayoutNav() {
           <View style={{ flex: 1 }}>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
             </Stack>
             <FloatingPlayer />
           </View>
