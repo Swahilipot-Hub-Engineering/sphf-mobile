@@ -147,7 +147,7 @@ export default function FmScreen() {
           ) : null}
         </View>
 
-        <ThemedText style={[styles.cardBody, playbackError ? styles.errorText : null]}>
+        <ThemedText style={[styles.cardBody, playbackError ? styles.streamErrorText : null]}>
           {statusCopy}
         </ThemedText>
 
@@ -305,6 +305,9 @@ const styles = StyleSheet.create({
   helperText: {
     fontSize: 12,
     color: '#6b7280',
+  },
+  streamErrorText: {
+    color: '#ef4444',
   },
   liveBadge: {
     flexDirection: 'row',

@@ -25,6 +25,8 @@ type StreamTrack = {
   artwork?: string;
 };
 
+class StreamValidationError extends Error {}
+
 type PlayerContextValue = {
   currentTrack: StreamTrack | null;
   status: AudioStatus | null;
@@ -72,7 +74,9 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   const resolveSafeStreamUrl = useCallback((url: string) => {
     const parsedUrl = new URL(url);
     if (parsedUrl.protocol !== 'https:') {
-      throw new Error(`Stream URL protocol must be HTTPS, got: ${parsedUrl.protocol}`);
+      throw new StreamValidationError(
+        `Stream URL protocol must be HTTPS, got: ${parsedUrl.protocol}`
+      );
     }
     parsedUrl.searchParams.delete('_ga');
     return parsedUrl.toString();
@@ -124,10 +128,8 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.warn('Failed to start Swahilipot FM stream', error);
-        const validationError =
-          error instanceof Error && error.message.includes('protocol must be HTTPS');
         setPlaybackError(
-          validationError
+          error instanceof StreamValidationError
             ? 'Invalid stream configuration. Please contact support.'
             : 'Stream connection failed. Please try again in a moment.'
         );

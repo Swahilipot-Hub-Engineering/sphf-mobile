@@ -36,6 +36,7 @@
 
 - **Check performed:** `npm audit --omit=dev`
 - **Result:** High/Critical advisories exist in current Expo/React Native dependency tree.
+- **Examples from current audit output:** `shell-quote` (critical), `expo` (high), `react-native` (high), and transitive tooling packages such as `@expo/cli` and `postcss` (high).
 - **Status:** **Release blocker until addressed.**
 - **Required action before release:** Upgrade to dependency versions that resolve advisories (likely via Expo SDK / React Native upgrade path) and re-run audit to confirm no unresolved High/Critical issues remain.
 
