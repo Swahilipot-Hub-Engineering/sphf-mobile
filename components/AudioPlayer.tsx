@@ -72,7 +72,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   const resolveSafeStreamUrl = useCallback((url: string) => {
     const parsedUrl = new URL(url);
     if (parsedUrl.protocol !== 'https:') {
-      throw new Error('Swahilipot FM stream must use HTTPS.');
+      throw new Error(`Stream URL protocol must be HTTPS, got: ${parsedUrl.protocol}`);
     }
     parsedUrl.searchParams.delete('_ga');
     return parsedUrl.toString();
