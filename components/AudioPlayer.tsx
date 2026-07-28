@@ -124,7 +124,13 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.warn('Failed to start Swahilipot FM stream', error);
-        setPlaybackError('Unable to start live stream. Please try again in a moment.');
+        const validationError =
+          error instanceof Error && error.message.includes('protocol must be HTTPS');
+        setPlaybackError(
+          validationError
+            ? 'Invalid stream configuration. Please contact support.'
+            : 'Stream connection failed. Please try again in a moment.'
+        );
       }
     },
     [currentTrack, ensureAudioMode, player, resolveSafeStreamUrl, status?.isLoaded, status?.playing]
