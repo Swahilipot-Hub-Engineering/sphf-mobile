@@ -102,10 +102,10 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   }, [ensureAudioMode]);
 
   useEffect(() => {
-    if (status?.isLoaded) {
+    if (status?.isLoaded || playbackError) {
       setIsLoading(false);
     }
-  }, [status?.isLoaded]);
+  }, [playbackError, status?.isLoaded]);
 
   const play = useCallback(
     async (track?: StreamTrack) => {
@@ -125,7 +125,6 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.warn('Failed to start Swahilipot FM stream', error);
         setPlaybackError('Unable to start live stream. Please try again in a moment.');
-        setIsLoading(false);
       }
     },
     [currentTrack, ensureAudioMode, player, resolveSafeStreamUrl, status?.isLoaded, status?.playing]

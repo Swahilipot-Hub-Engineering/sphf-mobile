@@ -56,5 +56,6 @@
 2. Re-run `npm audit --omit=dev` and confirm no unresolved High/Critical vulnerabilities.
 3. Manually verify FM playback:
    - Stream starts/stops normally.
-   - Invalid/unavailable stream path surfaces a user-visible error message.
+   - A non-HTTPS stream URL (temporary local test) is rejected with a user-visible error message.
+   - Network/stream unavailability still surfaces a user-visible error message.
 4. Confirm no secrets are committed and no tokens/credentials are logged or persisted.
