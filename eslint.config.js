@@ -7,6 +7,16 @@ module.exports = defineConfig([
     ignores: ['dist/*'],
   },
   {
+    files: ['*.config.js'],
+    languageOptions: {
+      globals: {
+        __dirname: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+      },
+    },
+  },
+  {
     rules: {
       'react/display-name': 'off',
     },
