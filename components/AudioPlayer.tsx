@@ -72,7 +72,12 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   const status = useAudioPlayerStatus(player);
 
   const resolveSafeStreamUrl = useCallback((url: string) => {
-    const parsedUrl = new URL(url);
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(url);
+    } catch {
+      throw new StreamValidationError('Stream URL is invalid.');
+    }
     if (parsedUrl.protocol !== 'https:') {
       throw new StreamValidationError('Stream URL protocol must be HTTPS.');
     }
