@@ -58,6 +58,7 @@ Install the following before setting up the project:
 
 Your phone and development machine must be on the same network when using Expo Go.
 For additional launch options and troubleshooting, see [docs/RUNNING.md](docs/RUNNING.md).
+For security and privacy release controls, see [docs/SECURITY_PRIVACY_AUDIT.md](docs/SECURITY_PRIVACY_AUDIT.md).
 
 ## Available commands
 
