@@ -113,7 +113,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         console.warn('Failed to start Swahilipot FM stream', error);
       }
     },
-    [currentTrack, ensureAudioMode, player, status?.isLoaded, status?.playing],
+    [currentTrack, ensureAudioMode, player, status?.isLoaded, status?.playing]
   );
 
   const pause = useCallback(async () => {
@@ -140,7 +140,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         await play(track);
       }
     },
-    [pause, play, status?.playing],
+    [pause, play, status?.playing]
   );
 
   const contextValue = useMemo<PlayerContextValue>(
@@ -154,7 +154,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
       stop,
       togglePlayback,
     }),
-    [currentTrack, status, isLoading, play, pause, stop, togglePlayback],
+    [currentTrack, status, isLoading, play, pause, stop, togglePlayback]
   );
 
   return <AudioPlayerContext.Provider value={contextValue}>{children}</AudioPlayerContext.Provider>;
@@ -167,4 +167,3 @@ export const useAudioPlayer = () => {
   }
   return context;
 };
-  

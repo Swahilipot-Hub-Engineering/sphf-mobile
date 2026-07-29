@@ -16,12 +16,11 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ]
+        "UIBackgroundModes": ["audio"]
       }
     },
     "android": {
+      "package": "com.swahilipothub.sphfmobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -34,11 +33,7 @@
       "output": "static",
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-audio",
-      "expo-font"
-    ],
+    "plugins": ["expo-router", "expo-audio", "expo-font"],
     "experiments": {
       "typedRoutes": true
     }

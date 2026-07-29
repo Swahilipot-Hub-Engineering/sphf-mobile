@@ -8,6 +8,8 @@
     "prebuild": "expo prebuild",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
+    "typecheck": "tsc --noEmit",
+    "quality": "npm run typecheck && npm run lint",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -33,6 +35,7 @@
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
+    "react-native-web": "^0.21.0",
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
