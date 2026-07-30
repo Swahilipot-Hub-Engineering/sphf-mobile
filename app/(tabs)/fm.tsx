@@ -4,8 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { V_PADDING, H_PADDING, GAP } from '.';
 
 import { FM_STREAM, useAudioPlayer } from '@/components/AudioPlayer';
-import { getCachedJson, setCachedJson } from '@/components/appStorage';
-import { Text as ThemedText, View as ThemedView, useThemeColor } from '@/components/Themed';
+import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
 
 // Define a type for the schedule item
 type ScheduleItem = {
@@ -19,23 +18,9 @@ type ScheduleItem = {
   sunday: string;
 };
 
-const SCHEDULE_CACHE_KEY = 'fm:schedule';
-
 export default function FmScreen() {
   const { currentTrack, isPlaying, isLoading, playbackError, togglePlayback, stop } =
     useAudioPlayer();
-  const cardBackgroundColor = useThemeColor({ light: '#ffffff', dark: '#0f172a' }, 'background');
-  const cardBorderColor = useThemeColor({ light: '#e5e7eb', dark: '#334155' }, 'text');
-  const mutedTextColor = useThemeColor({ light: '#475569', dark: '#cbd5e1' }, 'text');
-  const secondaryButtonBackgroundColor = useThemeColor(
-    { light: '#f8fafc', dark: '#111827' },
-    'background'
-  );
-  const secondaryButtonBorderColor = useThemeColor({ light: '#e2e8f0', dark: '#334155' }, 'text');
-  const secondaryButtonTextColor = useThemeColor({ light: '#0f172a', dark: '#e2e8f0' }, 'text');
-  const scheduleDividerColor = useThemeColor({ light: '#f1f5f9', dark: '#334155' }, 'text');
-  const scheduleShowColor = useThemeColor({ light: '#1e293b', dark: '#e2e8f0' }, 'text');
-  const helperTextColor = useThemeColor({ light: '#6b7280', dark: '#9ca3af' }, 'text');
   const isCurrentStream = currentTrack?.id === FM_STREAM.id;
   const playingLive = isCurrentStream && isPlaying;
 
@@ -47,20 +32,6 @@ export default function FmScreen() {
     const fetchSchedule = async () => {
       setScheduleLoading(true);
       setScheduleError(null);
-
-      let cachedSchedule: ScheduleItem[] | null = null;
-      try {
-        cachedSchedule = await getCachedJson<ScheduleItem[]>(SCHEDULE_CACHE_KEY);
-      } catch (error) {
-        console.warn('[FM] Failed to read schedule cache', error);
-      }
-
-      if (cachedSchedule && cachedSchedule.length > 0) {
-        setSchedule(cachedSchedule);
-        setScheduleLoading(false);
-        return;
-      }
-
       try {
         // Simulate network delay
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -129,13 +100,8 @@ export default function FmScreen() {
           },
         ];
         setSchedule(mockSchedule);
-        try {
-          await setCachedJson(SCHEDULE_CACHE_KEY, mockSchedule);
-        } catch (error) {
-          console.warn('[FM] Failed to write schedule cache', error);
-        }
-      } catch (error) {
-        console.error('Failed to load schedule:', error);
+      } catch (err) {
+        console.error('Failed to fetch schedule:', err);
         setScheduleError('Failed to load schedule. Please try again later.');
       } finally {
         setScheduleLoading(false);
@@ -168,18 +134,9 @@ export default function FmScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>{FM_STREAM.title}</ThemedText>
-      <ThemedText style={[styles.subtitle, { color: mutedTextColor }]}>
-        {FM_STREAM.subtitle}
-      </ThemedText>
+      <ThemedText style={styles.subtitle}>{FM_STREAM.subtitle}</ThemedText>
 
-      <View
-        style={[
-          styles.card,
-          {
-            borderColor: cardBorderColor,
-            backgroundColor: cardBackgroundColor,
-          },
-        ]}>
+      <View style={styles.card}>
         <View style={styles.cardHeader}>
           <ThemedText style={styles.cardTitle}>Now Playing</ThemedText>
           {playingLive ? (
@@ -190,12 +147,7 @@ export default function FmScreen() {
           ) : null}
         </View>
 
-        <ThemedText
-          style={[
-            styles.cardBody,
-            { color: mutedTextColor },
-            playbackError ? styles.streamErrorText : null,
-          ]}>
+        <ThemedText style={[styles.cardBody, playbackError ? styles.streamErrorText : null]}>
           {statusCopy}
         </ThemedText>
 
@@ -203,7 +155,6 @@ export default function FmScreen() {
           <Pressable
             style={({ pressed }) => [
               styles.primaryButton,
-              { borderColor: secondaryButtonBorderColor },
               playingLive ? styles.primaryButtonActive : null,
               pressed ? styles.buttonPressed : null,
             ]}
@@ -226,10 +177,6 @@ export default function FmScreen() {
           <Pressable
             style={({ pressed }) => [
               styles.secondaryButton,
-              {
-                backgroundColor: secondaryButtonBackgroundColor,
-                borderColor: secondaryButtonBorderColor,
-              },
               !isCurrentStream || isLoading ? styles.secondaryButtonDisabled : null,
               pressed ? styles.buttonPressed : null,
             ]}
@@ -237,41 +184,29 @@ export default function FmScreen() {
             accessibilityLabel="Stop Swahilipot FM stream"
             onPress={handleStop}
             disabled={!isCurrentStream || isLoading}>
-            <Ionicons name="stop" size={18} color={secondaryButtonTextColor} />
-            <ThemedText style={[styles.secondaryButtonLabel, { color: secondaryButtonTextColor }]}>
-              Stop
-            </ThemedText>
+            <Ionicons name="stop" size={18} color="#0f172a" />
+            <ThemedText style={styles.secondaryButtonLabel}>Stop</ThemedText>
           </Pressable>
         </View>
 
-        <ThemedText style={[styles.helperText, { color: helperTextColor }]}>
-          Use the floating mini player for quick access anywhere in the app.
+        <ThemedText style={styles.helperText}>
+          Audio continues playing while you browse other tabs or switch apps. Use the floating mini
+          player for quick access anywhere.
         </ThemedText>
       </View>
 
-      <View
-        style={[
-          styles.card,
-          {
-            borderColor: cardBorderColor,
-            backgroundColor: cardBackgroundColor,
-          },
-        ]}>
+      <View style={styles.card}>
         <ThemedText style={styles.cardTitle}>Today&apos;s Schedule</ThemedText>
         {scheduleLoading ? (
-          <ActivityIndicator size="small" color={mutedTextColor} />
+          <ActivityIndicator size="small" color="#475569" />
         ) : scheduleError ? (
           <ThemedText style={styles.errorText}>{scheduleError}</ThemedText>
         ) : schedule.length > 0 ? (
           <View style={styles.scheduleContainer}>
             {schedule.map((item, index) => (
-              <View
-                key={index}
-                style={[styles.scheduleItem, { borderBottomColor: scheduleDividerColor }]}>
-                <ThemedText style={[styles.scheduleTime, { color: mutedTextColor }]}>
-                  {item.time}
-                </ThemedText>
-                <ThemedText style={[styles.scheduleShow, { color: scheduleShowColor }]}>
+              <View key={index} style={styles.scheduleItem}>
+                <ThemedText style={styles.scheduleTime}>{item.time}</ThemedText>
+                <ThemedText style={styles.scheduleShow}>
                   {item[today as keyof ScheduleItem] || 'No show'}
                 </ThemedText>
               </View>
@@ -298,11 +233,14 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     lineHeight: 22,
+    color: '#475569',
   },
   card: {
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
+    borderColor: '#e5e7eb',
+    backgroundColor: '#fff',
     gap: 12,
   },
   cardHeader: {
@@ -317,6 +255,7 @@ const styles = StyleSheet.create({
   cardBody: {
     fontSize: 14,
     lineHeight: 20,
+    color: '#475569',
   },
   controls: {
     flexDirection: 'row',
@@ -326,7 +265,6 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 56,
     borderRadius: 999,
-    borderWidth: 1,
     backgroundColor: '#111827',
     flexDirection: 'row',
     alignItems: 'center',
@@ -346,6 +284,8 @@ const styles = StyleSheet.create({
     minHeight: 56,
     borderRadius: 16,
     borderWidth: 1,
+    borderColor: '#e2e8f0',
+    backgroundColor: '#f8fafc',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -355,6 +295,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   secondaryButtonLabel: {
+    color: '#0f172a',
     fontSize: 15,
     fontWeight: '600',
   },
@@ -363,6 +304,7 @@ const styles = StyleSheet.create({
   },
   helperText: {
     fontSize: 12,
+    color: '#6b7280',
   },
   streamErrorText: {
     color: '#ef4444',
@@ -395,14 +337,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 4,
     borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
   },
   scheduleTime: {
     fontSize: 14,
     fontWeight: '500',
+    color: '#475569',
     flexBasis: '35%',
   },
   scheduleShow: {
     fontSize: 14,
+    color: '#1e293b',
     flexBasis: '60%',
     textAlign: 'right',
   },
