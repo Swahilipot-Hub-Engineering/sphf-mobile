@@ -5,6 +5,7 @@ import { V_PADDING, H_PADDING, GAP } from '.';
 
 import { FM_STREAM, useAudioPlayer } from '@/components/AudioPlayer';
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
+import { appColors, fmTypography, radius, spacing, swahilipotFmColors, typography } from '@/theme';
 
 // Define a type for the schedule item
 type ScheduleItem = {
@@ -160,9 +161,13 @@ export default function FmScreen() {
             onPress={handlePrimaryAction}
             disabled={isLoading}>
             {isLoading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={swahilipotFmColors.button.primaryText} />
             ) : (
-              <Ionicons name={playingLive ? 'pause' : 'play'} size={20} color="#fff" />
+              <Ionicons
+                name={playingLive ? 'pause' : 'play'}
+                size={20}
+                color={swahilipotFmColors.button.primaryText}
+              />
             )}
             <ThemedText style={styles.primaryButtonLabel}>
               {playingLive ? 'Pause' : 'Play'}
@@ -179,7 +184,7 @@ export default function FmScreen() {
             accessibilityLabel="Stop Swahilipot FM stream"
             onPress={handleStop}
             disabled={!isCurrentStream || isLoading}>
-            <Ionicons name="stop" size={18} color="#0f172a" />
+            <Ionicons name="stop" size={18} color={swahilipotFmColors.button.secondaryText} />
             <ThemedText style={styles.secondaryButtonLabel}>Stop</ThemedText>
           </Pressable>
         </View>
@@ -193,7 +198,7 @@ export default function FmScreen() {
       <View style={styles.card}>
         <ThemedText style={styles.cardTitle}>Today&apos;s Schedule</ThemedText>
         {scheduleLoading ? (
-          <ActivityIndicator size="small" color="#475569" />
+          <ActivityIndicator size="small" color={appColors.light.textSecondary} />
         ) : scheduleError ? (
           <ThemedText style={styles.errorText}>{scheduleError}</ThemedText>
         ) : schedule.length > 0 ? (
@@ -222,21 +227,21 @@ const styles = StyleSheet.create({
     rowGap: GAP,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: fmTypography.heroTitle.fontSize,
+    fontWeight: fmTypography.heroTitle.fontWeight,
   },
   subtitle: {
-    fontSize: 16,
-    lineHeight: 22,
-    color: '#475569',
+    fontSize: typography.size.md,
+    lineHeight: typography.lineHeight.relaxed,
+    color: appColors.light.textSecondary,
   },
   card: {
-    padding: 16,
-    borderRadius: 16,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#fff',
-    gap: 12,
+    borderColor: appColors.light.border,
+    backgroundColor: swahilipotFmColors.player.panel,
+    gap: spacing.md,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -244,13 +249,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: typography.size.lg,
     fontWeight: '600',
   },
   cardBody: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: '#475569',
+    fontSize: fmTypography.body.fontSize,
+    lineHeight: fmTypography.body.lineHeight,
+    color: appColors.light.textSecondary,
   },
   controls: {
     flexDirection: 'row',
@@ -259,28 +264,28 @@ const styles = StyleSheet.create({
   primaryButton: {
     flex: 1,
     minHeight: 56,
-    borderRadius: 999,
-    backgroundColor: '#111827',
+    borderRadius: radius.pill,
+    backgroundColor: swahilipotFmColors.button.primaryBackground,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
   },
   primaryButtonActive: {
-    backgroundColor: '#0f172a',
+    backgroundColor: swahilipotFmColors.button.primaryBackgroundActive,
   },
   primaryButtonLabel: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '600',
+    color: swahilipotFmColors.button.primaryText,
+    fontSize: fmTypography.label.fontSize,
+    fontWeight: fmTypography.label.fontWeight,
   },
   secondaryButton: {
     flexBasis: 120,
     minHeight: 56,
-    borderRadius: 16,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#f8fafc',
+    borderColor: swahilipotFmColors.button.secondaryBorder,
+    backgroundColor: swahilipotFmColors.button.secondaryBackground,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -290,16 +295,16 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   secondaryButtonLabel: {
-    color: '#0f172a',
-    fontSize: 15,
-    fontWeight: '600',
+    color: swahilipotFmColors.button.secondaryText,
+    fontSize: fmTypography.label.fontSize,
+    fontWeight: fmTypography.label.fontWeight,
   },
   buttonPressed: {
     opacity: 0.85,
   },
   helperText: {
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: typography.size.xs,
+    color: appColors.light.textMuted,
   },
   liveBadge: {
     flexDirection: 'row',
@@ -307,19 +312,19 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 999,
-    backgroundColor: '#fee2e2',
+    borderRadius: radius.pill,
+    backgroundColor: swahilipotFmColors.player.liveBadge,
   },
   liveDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#dc2626',
+    backgroundColor: swahilipotFmColors.player.liveDot,
   },
   liveText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#b91c1c',
+    fontSize: fmTypography.badge.fontSize,
+    fontWeight: fmTypography.badge.fontWeight,
+    color: swahilipotFmColors.player.liveText,
   },
   scheduleContainer: {
     gap: 8,
@@ -329,22 +334,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 4,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
+    borderBottomColor: appColors.light.borderSubtle,
   },
   scheduleTime: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#475569',
+    fontSize: typography.size.sm,
+    fontWeight: typography.weight.medium,
+    color: appColors.light.textSecondary,
     flexBasis: '35%',
   },
   scheduleShow: {
-    fontSize: 14,
-    color: '#1e293b',
+    fontSize: typography.size.sm,
+    color: appColors.light.text,
     flexBasis: '60%',
     textAlign: 'right',
   },
   errorText: {
-    fontSize: 14,
-    color: '#ef4444',
+    fontSize: typography.size.sm,
+    color: swahilipotFmColors.accent[500],
   },
 });

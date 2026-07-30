@@ -82,6 +82,11 @@ constants/    Shared application constants
 docs/         Screenshots and detailed running instructions
 ```
 
+## Branding system
+
+The app uses a centralized design system and brand token architecture under `theme/`.
+For color, typography, icon, and asset naming standards, see `BRANDING_GUIDELINES.md`.
+
 ## Contributing
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Changes to
