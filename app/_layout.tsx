@@ -8,6 +8,7 @@ import { View } from 'react-native';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AppPreferencesProvider } from '@/components/AppPreferences';
 import PlayerProvider from '@/components/AudioPlayer';
 import FloatingPlayer from '@/components/FloatingPlayer';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -51,21 +52,29 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  return (
+    <AppPreferencesProvider>
+      <SafeAreaProvider>
+        <RootLayoutContent />
+      </SafeAreaProvider>
+    </AppPreferencesProvider>
+  );
+}
+
+function RootLayoutContent() {
   const colorScheme = useColorScheme();
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <PlayerProvider>
-          <View style={{ flex: 1 }}>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-            </Stack>
-            <FloatingPlayer />
-          </View>
-        </PlayerProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <PlayerProvider>
+        <View style={{ flex: 1 }}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          </Stack>
+          <FloatingPlayer />
+        </View>
+      </PlayerProvider>
+    </ThemeProvider>
   );
 }

@@ -14,7 +14,6 @@ import {
   useAudioPlayer as useExpoAudioPlayer,
   useAudioPlayerStatus,
 } from 'expo-audio';
-import { Platform } from 'react-native';
 
 type StreamTrack = {
   id: string;
@@ -64,7 +63,7 @@ const defaultPlayerContext: PlayerContextValue = {
 const AudioPlayerContext = createContext<PlayerContextValue>(defaultPlayerContext);
 
 export default function PlayerProvider({ children }: { children: ReactNode }) {
-  const audioConfiguredRef = useRef(false);
+  const configuredAudioModeRef = useRef(false);
   const [currentTrack, setCurrentTrack] = useState<StreamTrack | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [playbackError, setPlaybackError] = useState<string | null>(null);
@@ -86,7 +85,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const ensureAudioMode = useCallback(async () => {
-    if (Platform.OS === 'web' || audioConfiguredRef.current) {
+    if (configuredAudioModeRef.current) {
       return;
     }
     try {
@@ -98,7 +97,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         shouldPlayInBackground: true,
         shouldRouteThroughEarpiece: false,
       });
-      audioConfiguredRef.current = true;
+      configuredAudioModeRef.current = true;
     } catch (error) {
       console.warn('[AudioPlayer] Unable to configure audio mode', error);
     }

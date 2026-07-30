@@ -83,6 +83,13 @@ While `npm start` is running:
 | `a` | Open on Android device/emulator |
 | `?` | Show all commands |
 
+## Settings: Clear Cache Scope
+
+From the Settings tab, **Clear cache** removes cached app content (for example FM schedule data).
+
+- It **does clear** temporary content-cache entries.
+- It **does not clear** identity data (if added later) or essential app preferences such as theme and audio behavior.
+
 ## Troubleshooting
 
 - **"Port 8081 is running this app in another window"** — another dev server instance is already running. Stop it (Ctrl+C) or accept the prompt to use another port.

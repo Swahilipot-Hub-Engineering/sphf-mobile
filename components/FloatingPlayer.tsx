@@ -1,4 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,10 +23,11 @@ export default function FloatingPlayer() {
 
   return (
     <View pointerEvents="box-none" style={[styles.wrapper, { paddingBottom: bottomOffset }]}>
-      <View
-        style={styles.container}
-        accessibilityRole="adjustable"
-        accessibilityLabel={`${currentTrack.title} player`}>
+      <Pressable
+        style={({ pressed }) => [styles.container, pressed ? styles.containerPressed : null]}
+        onPress={() => router.push('/(tabs)/fm')}
+        accessibilityRole="button"
+        accessibilityLabel={`Open ${currentTrack.title} in FM tab`}>
         <View style={styles.meta}>
           <Text style={styles.title} numberOfLines={1}>
             {currentTrack.title}
@@ -39,7 +41,10 @@ export default function FloatingPlayer() {
         <View style={styles.controls}>
           <Pressable
             style={styles.controlButton}
-            onPress={() => togglePlayback(currentTrack)}
+            onPress={(event) => {
+              event.stopPropagation();
+              void togglePlayback(currentTrack);
+            }}
             accessibilityRole="button"
             accessibilityLabel={isPlaying ? 'Pause live stream' : 'Play live stream'}>
             {isLoading ? (
@@ -50,13 +55,16 @@ export default function FloatingPlayer() {
           </Pressable>
           <Pressable
             style={styles.controlButton}
-            onPress={stop}
+            onPress={(event) => {
+              event.stopPropagation();
+              void stop();
+            }}
             accessibilityRole="button"
-            accessibilityLabel="Stop live stream">
-            <FontAwesome name="stop" size={16} color="#111827" />
+            accessibilityLabel="Close FM player">
+            <FontAwesome name="times" size={16} color="#111827" />
           </Pressable>
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 }
@@ -86,6 +94,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 4,
     zIndex: 20,
+  },
+  containerPressed: {
+    opacity: 0.9,
   },
   meta: {
     flex: 1,
