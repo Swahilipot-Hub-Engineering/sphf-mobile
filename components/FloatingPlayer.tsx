@@ -11,10 +11,7 @@ export default function FloatingPlayer() {
   const insets = useSafeAreaInsets();
   const { currentTrack, isPlaying, isLoading, togglePlayback, stop } = useAudioPlayer();
 
-  const bottomOffset = useMemo(
-    () => Math.max(insets.bottom, 12) + TAB_BAR_HEIGHT_FALLBACK,
-    [insets.bottom]
-  );
+  const bottomOffset = useMemo(() => Math.max(insets.bottom, 12) + TAB_BAR_HEIGHT_FALLBACK, [insets.bottom]);
 
   if (!currentTrack) {
     return null;
@@ -22,10 +19,7 @@ export default function FloatingPlayer() {
 
   return (
     <View pointerEvents="box-none" style={[styles.wrapper, { paddingBottom: bottomOffset }]}>
-      <View
-        style={styles.container}
-        accessibilityRole="adjustable"
-        accessibilityLabel={`${currentTrack.title} player`}>
+      <View style={styles.container} accessibilityRole="adjustable" accessibilityLabel={`${currentTrack.title} player`}>
         <View style={styles.meta}>
           <Text style={styles.title} numberOfLines={1}>
             {currentTrack.title}
@@ -48,11 +42,7 @@ export default function FloatingPlayer() {
               <FontAwesome name={isPlaying ? 'pause' : 'play'} size={16} color="#111827" />
             )}
           </Pressable>
-          <Pressable
-            style={styles.controlButton}
-            onPress={stop}
-            accessibilityRole="button"
-            accessibilityLabel="Stop live stream">
+          <Pressable style={styles.controlButton} onPress={stop} accessibilityRole="button" accessibilityLabel="Stop live stream">
             <FontAwesome name="stop" size={16} color="#111827" />
           </Pressable>
         </View>

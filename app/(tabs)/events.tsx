@@ -7,9 +7,7 @@ export default function EventsScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Events</ThemedText>
-      <ThemedText style={styles.subtitle}>
-        Schedules and happenings across the Swahilipot ecosystem.
-      </ThemedText>
+      <ThemedText style={styles.subtitle}>Schedules and happenings across the Swahilipot ecosystem.</ThemedText>
       <View style={styles.card}>
         <ThemedText style={styles.cardTitle}>Upcoming</ThemedText>
         <ThemedText style={styles.cardBody}>List dates, venues, and registration links.</ThemedText>

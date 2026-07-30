@@ -1,18 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react'
+import { View, Text, StyleSheet } from 'react-native'
 import { H_PADDING, V_PADDING, GAP } from '.';
 
-export default function SettingsScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
-    </View>
-  );
+export default function SettingsScreen(){
+    return(
+      <View style={styles.container}>
+        <Text style={styles.title}>Settings</Text>
+      </View>
+    )
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: H_PADDING,
+    paddingHorizontal: H_PADDING,   
     paddingVertical: V_PADDING,
     rowGap: GAP,
   },
