@@ -11,7 +11,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PlayerProvider from '@/components/AudioPlayer';
 import FloatingPlayer from '@/components/FloatingPlayer';
 import { useColorScheme } from '@/components/useColorScheme';
-import React from 'react';
+
+import '../global.css';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,7 +29,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
 
