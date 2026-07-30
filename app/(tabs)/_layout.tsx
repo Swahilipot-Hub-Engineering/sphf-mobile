@@ -43,7 +43,9 @@ export default function TabLayout() {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon
-              name={swahilipotFmBranding.icons.tab as React.ComponentProps<typeof FontAwesome>['name']}
+              name={
+                swahilipotFmBranding.icons.tab as React.ComponentProps<typeof FontAwesome>['name']
+              }
               color={color}
             />
           ),
