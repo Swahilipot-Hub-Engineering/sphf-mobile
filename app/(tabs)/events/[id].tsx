@@ -104,7 +104,10 @@ export default function EventDetailsScreen() {
           <Ionicons name="alert-circle-outline" size={32} color="#ef4444" />
           <ThemedText style={styles.stateText}>{state.message}</ThemedText>
           <Pressable
-            style={({ pressed }) => [styles.retryButton, pressed ? styles.retryButtonPressed : null]}
+            style={({ pressed }) => [
+              styles.retryButton,
+              pressed ? styles.retryButtonPressed : null,
+            ]}
             accessibilityRole="button"
             accessibilityLabel="Retry loading this event"
             onPress={retry}>
@@ -188,7 +191,9 @@ function EventDetailsContent({
           <View style={styles.metaRow}>
             <Ionicons name="location-outline" size={16} color="#64748b" />
             <View style={{ flexShrink: 1 }}>
-              {location?.venue ? <ThemedText style={styles.metaText}>{location.venue}</ThemedText> : null}
+              {location?.venue ? (
+                <ThemedText style={styles.metaText}>{location.venue}</ThemedText>
+              ) : null}
               {location?.address ? (
                 <ThemedText style={styles.metaSubText}>{location.address}</ThemedText>
               ) : null}

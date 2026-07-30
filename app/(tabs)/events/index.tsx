@@ -1,7 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
 import { EventCard } from '@/components/events/EventCard';
@@ -103,7 +110,10 @@ export default function EventsScreen() {
           <Ionicons name="alert-circle-outline" size={32} color="#ef4444" />
           <ThemedText style={styles.stateText}>{error}</ThemedText>
           <Pressable
-            style={({ pressed }) => [styles.retryButton, pressed ? styles.retryButtonPressed : null]}
+            style={({ pressed }) => [
+              styles.retryButton,
+              pressed ? styles.retryButtonPressed : null,
+            ]}
             accessibilityRole="button"
             accessibilityLabel="Retry loading events"
             onPress={retry}>

@@ -17,7 +17,10 @@ function isWellFormedHttpUrl(value: string): boolean {
  * Validates and opens a link (http/https URL, email, or phone number), surfacing a
  * human-readable message on failure instead of throwing or failing silently.
  */
-export async function openExternalLink(value: string, kind: LinkKind = 'url'): Promise<OpenLinkResult> {
+export async function openExternalLink(
+  value: string,
+  kind: LinkKind = 'url'
+): Promise<OpenLinkResult> {
   if (kind === 'url' && !isWellFormedHttpUrl(value)) {
     return { ok: false, message: 'This link looks invalid and can’t be opened.' };
   }

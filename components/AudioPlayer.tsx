@@ -66,10 +66,13 @@ const AudioPlayerContext = createContext<PlayerContextValue>(defaultPlayerContex
 export default function PlayerProvider({ children }: { children: ReactNode }) {
   const audioConfiguredRef = useRef(false);
   const [currentTrack, setCurrentTrack] = useState<StreamTrack | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isAttemptingPlayback, setIsAttemptingPlayback] = useState(false);
   const [playbackError, setPlaybackError] = useState<string | null>(null);
   const player = useExpoAudioPlayer(null, { updateInterval: 1000, keepAudioSessionActive: true });
   const status = useAudioPlayerStatus(player);
+  // Derived rather than synced via effect: loading is "true" only while a
+  // play() attempt is in flight and neither resolved (isLoaded) nor failed.
+  const isLoading = isAttemptingPlayback && !status?.isLoaded && !playbackError;
 
   const resolveSafeStreamUrl = useCallback((url: string) => {
     let parsedUrl: URL;
@@ -108,17 +111,11 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
     void ensureAudioMode();
   }, [ensureAudioMode]);
 
-  useEffect(() => {
-    if (status?.isLoaded || playbackError) {
-      setIsLoading(false);
-    }
-  }, [playbackError, status?.isLoaded]);
-
   const play = useCallback(
     async (track?: StreamTrack) => {
       const targetTrack = track ?? currentTrack ?? FM_STREAM;
       setCurrentTrack(targetTrack);
-      setIsLoading(true);
+      setIsAttemptingPlayback(true);
       setPlaybackError(null);
       try {
         await ensureAudioMode();
@@ -138,7 +135,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         );
       }
     },
-    [currentTrack, ensureAudioMode, player, resolveSafeStreamUrl, status?.isLoaded, status?.playing]
+    [currentTrack, ensureAudioMode, player, resolveSafeStreamUrl, status]
   );
 
   const pause = useCallback(async () => {
@@ -156,7 +153,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
     // module cannot cast null to AudioSource and throws. Clearing
     // currentTrack makes the next play() reload the stream source instead.
     setCurrentTrack(null);
-    setIsLoading(false);
+    setIsAttemptingPlayback(false);
     setPlaybackError(null);
   }, [player]);
 

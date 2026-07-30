@@ -69,5 +69,7 @@ export function formatEventWhenShort(event: Pick<EventItem, 'startAt' | 'endAt'>
     start.getMonth() === end.getMonth() &&
     start.getDate() === end.getDate();
 
-  return sameDay ? startLabel : `${formatEventDateShort(event.startAt)} – ${formatEventDateShort(event.endAt)}`;
+  return sameDay
+    ? startLabel
+    : `${formatEventDateShort(event.startAt)} – ${formatEventDateShort(event.endAt)}`;
 }

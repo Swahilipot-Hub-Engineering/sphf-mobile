@@ -15,8 +15,7 @@ const MOCK_EVENTS: EventItem[] = [
       venue: 'Swahilipot Hub Main Auditorium',
       address: 'Mnazi Moja Grounds, Mombasa',
     },
-    imageUrl:
-      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
     summary: 'A 36-hour hackathon for youth building civic-tech solutions.',
     description:
       'Teams of up to five spend 36 hours designing and building a working prototype that ' +
@@ -36,8 +35,8 @@ const MOCK_EVENTS: EventItem[] = [
       email: 'programs@swahilipot.org',
       phone: '+254 700 000 000',
     },
-    registrationUrl: 'https://swahilipothub.co.ke/events/code-for-change-2026',
-    shareUrl: 'https://swahilipothub.co.ke/events/code-for-change-2026',
+    registrationUrl: 'https://swahilipot.org/events/code-for-change-2026',
+    shareUrl: 'https://swahilipot.org/events/code-for-change-2026',
   },
   {
     id: 'coastal-arts-showcase-2026',
@@ -47,8 +46,7 @@ const MOCK_EVENTS: EventItem[] = [
     location: {
       venue: 'Swahilipot Hub Amphitheatre',
     },
-    imageUrl:
-      'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=80',
     summary: 'An evening of music, spoken word, and visual art from coastal youth artists.',
     description:
       'Local musicians, poets, and visual artists share new work in a relaxed, open-air ' +
@@ -88,8 +86,7 @@ const MOCK_EVENTS: EventItem[] = [
     location: {
       venue: 'Swahilipot Hub Grounds',
     },
-    imageUrl:
-      'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80',
     summary: 'Swahilipot FM broadcast live with performances from local artists.',
     description:
       'Swahilipot FM took its studio outdoors for a live broadcast block party, featuring ' +
@@ -109,8 +106,7 @@ const MOCK_EVENTS: EventItem[] = [
       venue: 'Swahilipot Hub Main Auditorium',
       address: 'Mnazi Moja Grounds, Mombasa',
     },
-    imageUrl:
-      'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
     summary: 'Two days of talks and workshops on entrepreneurship and technology.',
     description:
       'A two-day summit bringing together young entrepreneurs, technologists, and mentors ' +
