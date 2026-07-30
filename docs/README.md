@@ -2,6 +2,8 @@
 
 This document contains a set of screenshots for the app. Images are stored in `docs/assets/images` and referenced relative to this file.
 
+For branding and design-token usage rules, see `BRANDING_GUIDELINES.md` in the repository root.
+
 ## Screenshots
 
 Below are screenshots demonstrating the app's main screens.

@@ -3,6 +3,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
+import { appColors, radius, spacing, typography } from '@/theme';
 
 export const H_PADDING = 16;
 export const V_PADDING = 70;
@@ -14,7 +15,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.topBar}>
-            <Image source={require('@/assets/images/sph-logo.png')} style={styles.logo} />
+            <Image source={require('@/assets/logos/sphf/sphf-logo-primary.png')} style={styles.logo} />
           </View>
           <ThemedText style={styles.title}>Choose where to go</ThemedText>
           <ThemedText style={styles.subtitle}>
@@ -55,8 +56,8 @@ const styles = StyleSheet.create({
     rowGap: GAP,
   },
   header: {
-    gap: 8,
-    marginBottom: 8,
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
   },
   topBar: {
     flexDirection: 'row',
@@ -66,66 +67,40 @@ const styles = StyleSheet.create({
   logo: {
     width: 300,
     height: 50,
-    borderRadius: 8,
+    borderRadius: radius.sm,
   },
   infoCard: {
-    marginTop: 8,
-    padding: 12,
-    borderRadius: 10,
+    marginTop: spacing.sm,
+    padding: spacing.md,
+    borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    gap: 8,
+    borderColor: appColors.light.border,
+    gap: spacing.sm,
   },
   infoTitle: {
-    fontSize: 16,
+    fontSize: typography.size.md,
     fontWeight: '700',
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 8,
+    gap: spacing.sm,
   },
   infoLabel: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     fontWeight: '600',
   },
   infoValue: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     flexShrink: 1,
     textAlign: 'right',
   },
-  overline: {
-    fontSize: 12,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
   title: {
-    fontSize: 24,
+    fontSize: typography.size.x2l,
     fontWeight: '700',
   },
   subtitle: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  item: {
-    flexGrow: 1,
-  },
-  card: {
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    borderRadius: 10,
-    gap: 8,
-  },
-  cardPressed: {
-    opacity: 0.85,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  cardBody: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: typography.size.md,
+    lineHeight: typography.lineHeight.relaxed,
   },
 });

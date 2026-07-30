@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { V_PADDING, H_PADDING, GAP } from '.';
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
 import React from 'react';
+import { appColors, radius, spacing, typography } from '@/theme';
 
 export default function FoundationScreen() {
   return (
@@ -41,35 +42,35 @@ const styles = StyleSheet.create({
     rowGap: GAP,
   },
   description: {
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: typography.size.md,
+    lineHeight: typography.lineHeight.relaxed,
   },
   overline: {
-    fontSize: 14,
-    letterSpacing: 1,
+    fontSize: typography.size.sm,
+    letterSpacing: typography.letterSpacing.overline,
     textTransform: 'uppercase',
   },
   title: {
-    fontSize: 24,
+    fontSize: typography.size.x2l,
     fontWeight: '700',
   },
   subtitle: {
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: typography.size.md,
+    lineHeight: typography.lineHeight.relaxed,
   },
   card: {
-    padding: 12,
-    borderRadius: 10,
+    padding: spacing.md,
+    borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    gap: 8,
+    borderColor: appColors.light.border,
+    gap: spacing.sm,
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: typography.size.md,
     fontWeight: '600',
   },
   cardBody: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: typography.size.sm,
+    lineHeight: typography.lineHeight.base,
   },
 });
