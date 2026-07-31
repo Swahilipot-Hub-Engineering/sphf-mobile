@@ -15,7 +15,10 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.topBar}>
-            <Image source={require('@/assets/logos/sphf/sphf-logo-primary.png')} style={styles.logo} />
+            <Image
+              source={require('@/assets/logos/sphf/sphf-logo-primary.png')}
+              style={styles.logo}
+            />
           </View>
           <ThemedText style={styles.title}>Choose where to go</ThemedText>
           <ThemedText style={styles.subtitle}>
