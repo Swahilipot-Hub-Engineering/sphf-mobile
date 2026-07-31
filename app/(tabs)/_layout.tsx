@@ -1,14 +1,16 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
+import type { ColorValue } from 'react-native';
 
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
+import { swahilipotFmBranding } from '@/theme';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
+  color: ColorValue;
 }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
@@ -40,7 +42,14 @@ export default function TabLayout() {
         options={{
           title: 'FM',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="podcast" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon
+              name={
+                swahilipotFmBranding.icons.tab as React.ComponentProps<typeof FontAwesome>['name']
+              }
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
