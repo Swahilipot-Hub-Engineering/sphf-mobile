@@ -1,16 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
-// Use a stable value during SSR/SSG to avoid hydration mismatches, then switch
-// to the client value after the first client render.
+// `useSyncExternalStore`'s server snapshot only runs during server rendering,
+// and its client snapshot only runs once hydrated on the client. This lets us
+// pick a stable value during SSR/SSG to avoid hydration mismatches, then
+// switch to the client value after the first client render, without calling
+// `setState` from inside an effect.
+function subscribe() {
+  return () => {};
+}
+
 export function useClientOnlyValue<TServer, TClient>(
   serverValue: TServer,
   clientValue: TClient
 ): TServer | TClient {
-  const [value, setValue] = useState<TServer | TClient>(serverValue);
+  const isHydrated = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
-  useEffect(() => {
-    setValue(clientValue);
-  }, [clientValue]);
-
-  return value;
+  return isHydrated ? clientValue : serverValue;
 }
