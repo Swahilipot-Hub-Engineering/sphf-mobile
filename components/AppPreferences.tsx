@@ -29,7 +29,7 @@ const AppPreferencesContext = createContext<AppPreferencesContextValue>(defaultC
 
 const resolveColorScheme = (
   themePreference: ThemePreference,
-  systemColorScheme: 'light' | 'dark' | null | undefined
+  systemColorScheme: ReturnType<typeof useSystemColorScheme>
 ): 'light' | 'dark' => {
   if (themePreference === 'system') {
     return systemColorScheme === 'dark' ? 'dark' : 'light';
