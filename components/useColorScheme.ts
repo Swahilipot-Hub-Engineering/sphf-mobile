@@ -1,3 +1,5 @@
+import { useAppPreferences } from '@/components/AppPreferences';
+
 export function useColorScheme(): 'light' | 'dark' {
-  return 'light';
+  return useAppPreferences().colorScheme;
 }
