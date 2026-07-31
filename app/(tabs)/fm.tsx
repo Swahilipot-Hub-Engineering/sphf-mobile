@@ -5,6 +5,7 @@ import { V_PADDING, H_PADDING, GAP } from '.';
 
 import { FM_STREAM, useAudioPlayer } from '@/components/AudioPlayer';
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
+import { appColors, fmTypography, radius, spacing, swahilipotFmColors, typography } from '@/theme';
 
 // Define a type for the schedule item
 type ScheduleItem = {
@@ -48,8 +49,6 @@ export default function FmScreen() {
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
   const [scheduleLoading, setScheduleLoading] = useState(true);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
-  // NEW: distinguishes "no connection" from a generic fetch failure, so we can
-  // show a different icon/message/retry flow for each.
   const [isOffline, setIsOffline] = useState(false);
 
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as DayKey;
@@ -60,10 +59,8 @@ export default function FmScreen() {
     setScheduleError(null);
     setIsOffline(false);
     try {
-      // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Mock schedule data based on the structure observed from the URL
       const mockSchedule: ScheduleItem[] = [
         {
           time: '00:00 - 06:00',
@@ -185,7 +182,7 @@ export default function FmScreen() {
       {/* Hero section */}
       <View style={styles.hero}>
         <View style={styles.heroIconWrap}>
-          <Ionicons name="radio" size={26} color="#fff" />
+          <Ionicons name="radio" size={26} color={swahilipotFmColors.button.primaryText} />
         </View>
         <ThemedText style={styles.title}>{FM_STREAM.title}</ThemedText>
         <ThemedText style={styles.subtitle}>{FM_STREAM.subtitle}</ThemedText>
@@ -197,10 +194,10 @@ export default function FmScreen() {
         </View>
       </View>
 
-      {/* NEW: Explicit playback-error state — separate banner, doesn't touch the buttons below */}
+      {/* Explicit playback-error state — separate banner, doesn't touch the buttons below */}
       {playbackError ? (
         <View style={styles.errorBanner} accessibilityLiveRegion="polite">
-          <Ionicons name="warning" size={20} color="#dc2626" />
+          <Ionicons name="warning" size={20} color={swahilipotFmColors.accent[600]} />
           <View style={styles.errorBannerTextWrap}>
             <ThemedText style={styles.errorBannerTitle}>Playback error</ThemedText>
             <ThemedText style={styles.errorBannerBody}>{playbackError}</ThemedText>
@@ -228,9 +225,13 @@ export default function FmScreen() {
             onPress={handlePrimaryAction}
             disabled={isLoading}>
             {isLoading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={swahilipotFmColors.button.primaryText} />
             ) : (
-              <Ionicons name={playingLive ? 'pause' : 'play'} size={20} color="#fff" />
+              <Ionicons
+                name={playingLive ? 'pause' : 'play'}
+                size={20}
+                color={swahilipotFmColors.button.primaryText}
+              />
             )}
             <ThemedText style={styles.primaryButtonLabel}>
               {playingLive ? 'Pause' : 'Play'}
@@ -247,7 +248,7 @@ export default function FmScreen() {
             accessibilityLabel="Stop Swahilipot FM stream"
             onPress={handleStop}
             disabled={!isCurrentStream || isLoading}>
-            <Ionicons name="stop" size={18} color="#0f172a" />
+            <Ionicons name="stop" size={18} color={swahilipotFmColors.button.secondaryText} />
             <ThemedText style={styles.secondaryButtonLabel}>Stop</ThemedText>
           </Pressable>
         </View>
@@ -303,13 +304,13 @@ export default function FmScreen() {
         {/* STATE 1: Loading */}
         {scheduleLoading ? (
           <View style={styles.stateContainer} accessibilityLiveRegion="polite">
-            <ActivityIndicator size="large" color="#475569" />
+            <ActivityIndicator size="large" color={appColors.light.textSecondary} />
             <ThemedText style={styles.stateText}>Loading today&apos;s programming…</ThemedText>
           </View>
         ) : /* STATE 2: Offline */
         scheduleError && isOffline ? (
           <View style={styles.stateContainer} accessibilityLiveRegion="polite">
-            <Ionicons name="cloud-offline-outline" size={40} color="#94a3b8" />
+            <Ionicons name="cloud-offline-outline" size={40} color={appColors.light.textMuted} />
             <ThemedText style={styles.stateText}>
               You&apos;re offline. Showing may be out of date.
             </ThemedText>
@@ -324,7 +325,7 @@ export default function FmScreen() {
         ) : /* STATE 3: Generic error */
         scheduleError ? (
           <View style={styles.stateContainer} accessibilityLiveRegion="polite">
-            <Ionicons name="alert-circle-outline" size={40} color="#dc2626" />
+            <Ionicons name="alert-circle-outline" size={40} color={swahilipotFmColors.accent[600]} />
             <ThemedText style={styles.stateText}>{scheduleError}</ThemedText>
             <Pressable
               onPress={fetchSchedule}
@@ -337,7 +338,7 @@ export default function FmScreen() {
         ) : /* STATE 4: Empty */
         schedule.length === 0 ? (
           <View style={styles.stateContainer}>
-            <Ionicons name="calendar-clear-outline" size={40} color="#94a3b8" />
+            <Ionicons name="calendar-clear-outline" size={40} color={appColors.light.textMuted} />
             <ThemedText style={styles.stateText}>No shows scheduled right now.</ThemedText>
           </View>
         ) : (
@@ -371,268 +372,265 @@ const styles = StyleSheet.create({
   },
   hero: {
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 8,
+    gap: spacing.xs + 2,
+    paddingVertical: spacing.sm,
   },
   heroIconWrap: {
     width: 52,
     height: 52,
-    borderRadius: 16,
-    backgroundColor: '#111827',
+    borderRadius: radius.lg,
+    backgroundColor: swahilipotFmColors.player.backgroundActive,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: fmTypography.heroTitle.fontSize,
+    fontWeight: fmTypography.heroTitle.fontWeight,
+    letterSpacing: fmTypography.heroTitle.letterSpacing,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    lineHeight: 22,
-    color: '#475569',
+    fontSize: typography.size.md,
+    lineHeight: typography.lineHeight.relaxed,
+    color: appColors.light.textSecondary,
     textAlign: 'center',
   },
   nowPlayingCard: {
-    padding: 16,
-    borderRadius: 16,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#fff',
-    gap: 12,
+    borderColor: appColors.light.border,
+    backgroundColor: swahilipotFmColors.player.panel,
+    gap: spacing.md,
   },
   card: {
-    padding: 16,
-    borderRadius: 16,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#fff',
-    gap: 12,
+    borderColor: appColors.light.border,
+    backgroundColor: swahilipotFmColors.player.panel,
+    gap: spacing.md,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: typography.size.lg,
+    fontWeight: typography.weight.semibold,
   },
   cardBody: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: '#475569',
+    fontSize: fmTypography.body.fontSize,
+    lineHeight: fmTypography.body.lineHeight,
+    color: appColors.light.textSecondary,
   },
   controls: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.md,
   },
   primaryButton: {
     flex: 1,
     minHeight: 56,
-    borderRadius: 999,
-    backgroundColor: '#111827',
+    borderRadius: radius.pill,
+    backgroundColor: swahilipotFmColors.button.primaryBackground,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: spacing.sm,
   },
   primaryButtonActive: {
-    backgroundColor: '#0f172a',
+    backgroundColor: swahilipotFmColors.button.primaryBackgroundActive,
   },
   primaryButtonLabel: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '600',
+    color: swahilipotFmColors.button.primaryText,
+    fontSize: fmTypography.label.fontSize,
+    fontWeight: fmTypography.label.fontWeight,
   },
   secondaryButton: {
     flexBasis: 120,
     minHeight: 56,
-    borderRadius: 16,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#f8fafc',
+    borderColor: swahilipotFmColors.button.secondaryBorder,
+    backgroundColor: swahilipotFmColors.button.secondaryBackground,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: spacing.xs + 2,
   },
   secondaryButtonDisabled: {
     opacity: 0.5,
   },
   secondaryButtonLabel: {
-    color: '#0f172a',
-    fontSize: 15,
-    fontWeight: '600',
+    color: swahilipotFmColors.button.secondaryText,
+    fontSize: fmTypography.label.fontSize,
+    fontWeight: fmTypography.label.fontWeight,
   },
   buttonPressed: {
     opacity: 0.85,
   },
   helperText: {
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: typography.size.xs,
+    color: appColors.light.textMuted,
   },
   streamErrorText: {
-    color: '#ef4444',
+    color: swahilipotFmColors.accent[500],
   },
   liveBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-    backgroundColor: '#fee2e2',
+    gap: spacing.xs + 2,
+    paddingHorizontal: spacing.md - 2,
+    paddingVertical: spacing.xxs + 2,
+    borderRadius: radius.pill,
+    backgroundColor: swahilipotFmColors.player.liveBadge,
   },
   liveBadgeOffline: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: appColors.light.border,
   },
   liveDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#dc2626',
+    backgroundColor: swahilipotFmColors.player.liveDot,
   },
   liveDotOffline: {
-    backgroundColor: '#6b7280',
+    backgroundColor: appColors.light.textMuted,
   },
   liveText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#b91c1c',
+    fontSize: fmTypography.badge.fontSize,
+    fontWeight: fmTypography.badge.fontWeight,
+    letterSpacing: fmTypography.badge.letterSpacing,
+    color: swahilipotFmColors.player.liveText,
   },
   liveTextOffline: {
-    color: '#374151',
+    color: appColors.light.textSecondary,
   },
-  // NEW: playback-error banner
   errorBanner: {
     flexDirection: 'row',
-    gap: 10,
-    padding: 12,
-    borderRadius: 12,
+    gap: spacing.sm + 2,
+    padding: spacing.md,
+    borderRadius: radius.md + 2,
     borderWidth: 1,
-    borderColor: '#fecaca',
-    backgroundColor: '#fef2f2',
+    borderColor: swahilipotFmColors.accent[200],
+    backgroundColor: swahilipotFmColors.accent[50],
     alignItems: 'flex-start',
   },
   errorBannerTextWrap: {
     flex: 1,
   },
   errorBannerTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#b91c1c',
+    fontSize: typography.size.sm - 1,
+    fontWeight: typography.weight.bold,
+    color: swahilipotFmColors.accent[700],
   },
   errorBannerBody: {
-    fontSize: 13,
-    color: '#7f1d1d',
+    fontSize: typography.size.sm - 1,
+    color: swahilipotFmColors.accent[900],
     marginTop: 2,
   },
-  // Up next preview row
   previewRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: spacing.md,
   },
   previewCard: {
     flex: 1,
-    padding: 12,
-    borderRadius: 14,
+    padding: spacing.md,
+    borderRadius: radius.md + 4,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#f8fafc',
+    borderColor: appColors.light.border,
+    backgroundColor: swahilipotFmColors.player.panelMuted,
   },
   previewLabel: {
-    fontSize: 11,
-    color: '#94a3b8',
+    fontSize: typography.size.xs - 1,
+    color: appColors.light.textMuted,
     marginBottom: 2,
   },
   previewShow: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1e293b',
+    fontSize: typography.size.sm,
+    fontWeight: typography.weight.semibold,
+    color: appColors.light.text,
   },
-  // Day tabs
   dayTabsScroll: {
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   dayTabs: {
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   dayTab: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 999,
+    paddingHorizontal: spacing.md + 2,
+    paddingVertical: spacing.xs + 2,
+    borderRadius: radius.pill,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
+    borderColor: appColors.light.borderStrong,
+    backgroundColor: appColors.light.surface,
   },
   dayTabSelected: {
-    backgroundColor: '#111827',
-    borderColor: '#111827',
+    backgroundColor: swahilipotFmColors.button.primaryBackground,
+    borderColor: swahilipotFmColors.button.primaryBackground,
   },
   dayTabLabel: {
-    fontSize: 13,
-    color: '#475569',
-    fontWeight: '500',
+    fontSize: typography.size.sm - 1,
+    color: appColors.light.textSecondary,
+    fontWeight: typography.weight.medium,
   },
   dayTabLabelSelected: {
-    color: '#fff',
+    color: swahilipotFmColors.button.primaryText,
   },
-  // NEW: shared state container (loading / offline / error / empty)
   stateContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 32,
-    gap: 8,
+    paddingVertical: spacing.x3l,
+    gap: spacing.sm,
   },
   stateText: {
-    fontSize: 14,
-    color: '#64748b',
+    fontSize: typography.size.sm,
+    color: appColors.light.textMuted,
     textAlign: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
   },
   retryButton: {
-    marginTop: 8,
-    paddingHorizontal: 18,
-    paddingVertical: 8,
-    borderRadius: 999,
+    marginTop: spacing.xs,
+    paddingHorizontal: spacing.lg + 2,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.pill,
     borderWidth: 1,
-    borderColor: '#cbd5e1',
+    borderColor: appColors.light.borderStrong,
   },
   retryButtonLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#111827',
+    fontSize: typography.size.sm - 1,
+    fontWeight: typography.weight.semibold,
+    color: appColors.light.text,
   },
-  // Timeline (normal state)
   timelineContainer: {
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   timelineRow: {
     flexDirection: 'row',
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   timelineTimeCol: {
     width: 56,
     alignItems: 'center',
-    marginRight: 10,
+    marginRight: spacing.sm + 2,
   },
   timelineLine: {
     flex: 1,
     width: 2,
-    backgroundColor: '#e5e7eb',
-    marginTop: 4,
+    backgroundColor: appColors.light.border,
+    marginTop: spacing.xs,
   },
   timelineCard: {
     flex: 1,
-    padding: 10,
-    borderRadius: 12,
-    backgroundColor: '#f8fafc',
+    padding: spacing.sm + 2,
+    borderRadius: radius.md + 2,
+    backgroundColor: swahilipotFmColors.player.panelMuted,
   },
   scheduleTime: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#475569',
+    fontSize: typography.size.xs,
+    fontWeight: typography.weight.semibold,
+    color: appColors.light.textSecondary,
   },
   scheduleShow: {
-    fontSize: 14,
-    color: '#1e293b',
+    fontSize: typography.size.sm,
+    color: appColors.light.text,
   },
 });
