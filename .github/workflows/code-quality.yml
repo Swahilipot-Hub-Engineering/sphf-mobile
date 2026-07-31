@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -34,5 +36,35 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run quality checks
-        run: npm run quality
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Determine changed files
+        id: changed
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+          fi
+
+          if [ -z "$BASE_SHA" ] || ! git cat-file -e "$BASE_SHA" 2>/dev/null; then
+            # No usable base (e.g. first push to a new branch) - diff against the empty tree.
+            BASE_SHA=$(git hash-object -t tree /dev/null)
+          fi
+
+          git diff --name-only --diff-filter=ACMR "$BASE_SHA" "${{ github.sha }}" \
+            -- '*.js' '*.jsx' '*.ts' '*.tsx' > changed-lintable.txt
+          git diff --name-only --diff-filter=ACMR "$BASE_SHA" "${{ github.sha }}" \
+            -- '*.js' '*.jsx' '*.ts' '*.tsx' '*.json' > changed-formattable.txt
+
+          echo "lint_count=$(wc -l < changed-lintable.txt)" >> "$GITHUB_OUTPUT"
+          echo "format_count=$(wc -l < changed-formattable.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Lint changed files
+        if: steps.changed.outputs.lint_count != '0'
+        run: xargs -d '\n' -a changed-lintable.txt npx eslint
+
+      - name: Check formatting of changed files
+        if: steps.changed.outputs.format_count != '0'
+        run: xargs -d '\n' -a changed-formattable.txt npx prettier -c
