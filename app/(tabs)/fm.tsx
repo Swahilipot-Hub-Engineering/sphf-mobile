@@ -18,14 +18,7 @@ type ScheduleItem = {
   sunday: string;
 };
 
-type DayKey =
-  | 'sunday'
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday';
+type DayKey = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 
 const DAY_TABS: { key: DayKey; label: string }[] = [
   { key: 'sunday', label: 'Sun' },
