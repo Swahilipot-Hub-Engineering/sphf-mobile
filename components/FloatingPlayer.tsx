@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-nati
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAudioPlayer } from './AudioPlayer';
+import { appColors, radius, shadows, spacing, swahilipotFmColors, typography } from '@/theme';
 
 const TAB_BAR_HEIGHT_FALLBACK = 64;
 
@@ -43,9 +44,13 @@ export default function FloatingPlayer() {
             accessibilityRole="button"
             accessibilityLabel={isPlaying ? 'Pause live stream' : 'Play live stream'}>
             {isLoading ? (
-              <ActivityIndicator size="small" color="#111827" />
+              <ActivityIndicator size="small" color={swahilipotFmColors.player.controlIcon} />
             ) : (
-              <FontAwesome name={isPlaying ? 'pause' : 'play'} size={16} color="#111827" />
+              <FontAwesome
+                name={isPlaying ? 'pause' : 'play'}
+                size={16}
+                color={swahilipotFmColors.player.controlIcon}
+              />
             )}
           </Pressable>
           <Pressable
@@ -53,7 +58,7 @@ export default function FloatingPlayer() {
             onPress={stop}
             accessibilityRole="button"
             accessibilityLabel="Stop live stream">
-            <FontAwesome name="stop" size={16} color="#111827" />
+            <FontAwesome name="stop" size={16} color={swahilipotFmColors.player.controlIcon} />
           </Pressable>
         </View>
       </View>
@@ -67,39 +72,35 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     pointerEvents: 'box-none',
   },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 999,
+    borderRadius: radius.pill,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#d1d5db',
-    paddingHorizontal: 16,
+    borderColor: appColors.light.borderStrong,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 10,
-    backgroundColor: '#ffffffee',
-    shadowColor: '#111827',
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    backgroundColor: appColors.light.surfaceRaised,
+    ...shadows.soft,
     zIndex: 20,
   },
   meta: {
     flex: 1,
-    paddingRight: 12,
+    paddingRight: spacing.md,
   },
   title: {
-    fontSize: 14,
+    fontSize: typography.size.sm,
     fontWeight: '700',
-    color: '#111827',
+    color: appColors.light.text,
   },
   subtitle: {
-    fontSize: 12,
-    color: '#4b5563',
-    marginTop: 2,
+    fontSize: typography.size.xs,
+    color: appColors.light.textSecondary,
+    marginTop: spacing.xxs,
   },
   controls: {
     flexDirection: 'row',
@@ -108,10 +109,10 @@ const styles = StyleSheet.create({
   controlButton: {
     height: 36,
     width: 36,
-    borderRadius: 18,
+    borderRadius: radius.round,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#d1d5db',
-    backgroundColor: '#f3f4f6',
+    borderColor: appColors.light.borderStrong,
+    backgroundColor: swahilipotFmColors.player.panelMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },
