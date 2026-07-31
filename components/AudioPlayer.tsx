@@ -128,6 +128,7 @@ export default function PlayerProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.warn('Failed to start Swahilipot FM stream', error);
+        setIsAttemptingPlayback(false);
         setPlaybackError(
           error instanceof StreamValidationError
             ? 'Stream configuration is invalid. Please try again later.'
