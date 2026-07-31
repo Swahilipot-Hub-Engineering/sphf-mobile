@@ -1,31 +1,98 @@
-import { Image } from 'expo-image';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
 
 import { Text as ThemedText, View as ThemedView } from '@/components/Themed';
-import { appColors, radius, spacing, typography } from '@/theme';
+import { FM_STREAM, useAudioPlayer } from '@/components/AudioPlayer';
+import HomeHero from '@/components/home/HomeHero';
+import HomeSection from '@/components/home/HomeSection';
+import HomeModuleCard, { type HomeModuleStatus } from '@/components/home/HomeModuleCard';
+import HomeErrorBoundary from '@/components/home/HomeErrorBoundary';
+import { homeColors } from '@/components/home/theme';
 
 export const H_PADDING = 16;
 export const V_PADDING = 70;
 export const GAP = 12;
 
+function FmModuleCard({ style }: { style?: StyleProp<ViewStyle> }) {
+  const { currentTrack, isPlaying, isLoading } = useAudioPlayer();
+  const isCurrentStream = currentTrack?.id === FM_STREAM.id;
+
+  const status: HomeModuleStatus =
+    isLoading && isCurrentStream
+      ? { label: 'Connecting…', tone: 'loading' }
+      : isPlaying && isCurrentStream
+        ? { label: 'Live now', tone: 'live' }
+        : { label: 'Tap to listen', tone: 'idle' };
+
+  return (
+    <HomeModuleCard
+      icon="podcast"
+      title="Swahilipot FM"
+      description={FM_STREAM.subtitle ?? FM_STREAM.description ?? ''}
+      ctaLabel="Listen live"
+      href="/fm"
+      status={status}
+      style={style}
+    />
+  );
+}
+
 export default function HomeScreen() {
+  const { width } = useWindowDimensions();
+  const isMultiColumn = width >= 700;
+
   return (
     <ThemedView style={styles.page}>
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View style={styles.topBar}>
-            <Image
-              source={require('@/assets/logos/sphf/sphf-logo-primary.png')}
-              style={styles.logo}
+        <HomeHero />
+
+        <HomeSection
+          title="Explore the app"
+          subtitle="Jump into any module below. You can always come back here from the Home tab.">
+          <View style={[styles.cardGrid, isMultiColumn && styles.cardGridMultiColumn]}>
+            <HomeErrorBoundary fallbackLabel="Swahilipot FM is unavailable right now. Try the FM tab directly.">
+              <FmModuleCard style={isMultiColumn && styles.cardMultiColumn} />
+            </HomeErrorBoundary>
+
+            <HomeModuleCard
+              icon="building"
+              title="Foundation"
+              description="Programs, community events, and youth upskilling."
+              ctaLabel="Explore Foundation"
+              href="/foundation"
+              style={isMultiColumn && styles.cardMultiColumn}
+            />
+
+            <HomeModuleCard
+              icon="calendar"
+              title="Events"
+              description="Schedules and happenings across the Swahilipot ecosystem."
+              ctaLabel="View events"
+              href="/events"
+              style={isMultiColumn && styles.cardMultiColumn}
             />
           </View>
-          <ThemedText style={styles.title}>Choose where to go</ThemedText>
-          <ThemedText style={styles.subtitle}>
-            Pick a module to jump into. You can always return here from the Home tab.
-          </ThemedText>
+        </HomeSection>
+
+        <HomeSection title="More">
+          <HomeModuleCard
+            icon="cog"
+            title="Settings"
+            description="Manage your app preferences."
+            ctaLabel="Open settings"
+            href="/settings"
+          />
+        </HomeSection>
+
+        <HomeSection title="Key information">
           <View style={styles.infoCard}>
-            <ThemedText style={styles.infoTitle}>Key information</ThemedText>
             <View style={styles.infoRow}>
               <ThemedText style={styles.infoLabel}>Website</ThemedText>
               <ThemedText style={styles.infoValue}>https://swahilipot.org</ThemedText>
@@ -35,15 +102,11 @@ export default function HomeScreen() {
               <ThemedText style={styles.infoValue}>info@swahilipot.org</ThemedText>
             </View>
             <View style={styles.infoRow}>
-              <ThemedText style={styles.infoLabel}>Customer care</ThemedText>
-              <ThemedText style={styles.infoValue}>+254 700 000 000</ThemedText>
-            </View>
-            <View style={styles.infoRow}>
               <ThemedText style={styles.infoLabel}>Location</ThemedText>
               <ThemedText style={styles.infoValue}>Mombasa, Kenya</ThemedText>
             </View>
           </View>
-        </View>
+        </HomeSection>
       </ScrollView>
     </ThemedView>
   );
@@ -56,54 +119,39 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: H_PADDING,
     paddingVertical: V_PADDING,
-    rowGap: GAP,
+    rowGap: GAP * 2,
   },
-  header: {
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
+  cardGrid: {
+    gap: GAP,
   },
-  topBar: {
+  cardGridMultiColumn: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
-  logo: {
-    width: 300,
-    height: 50,
-    borderRadius: radius.sm,
+  cardMultiColumn: {
+    flexBasis: '31%',
+    flexGrow: 1,
+    minWidth: 260,
   },
   infoCard: {
-    marginTop: spacing.sm,
-    padding: spacing.md,
-    borderRadius: radius.md,
+    padding: 12,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: appColors.light.border,
-    gap: spacing.sm,
-  },
-  infoTitle: {
-    fontSize: typography.size.md,
-    fontWeight: '700',
+    borderColor: homeColors.border,
+    gap: 8,
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: spacing.sm,
+    gap: 8,
   },
   infoLabel: {
-    fontSize: typography.size.sm,
+    fontSize: 14,
     fontWeight: '600',
   },
   infoValue: {
-    fontSize: typography.size.sm,
+    fontSize: 14,
     flexShrink: 1,
     textAlign: 'right',
-  },
-  title: {
-    fontSize: typography.size.x2l,
-    fontWeight: '700',
-  },
-  subtitle: {
-    fontSize: typography.size.md,
-    lineHeight: typography.lineHeight.relaxed,
   },
 });
