@@ -124,7 +124,6 @@ export default function FmScreen() {
         },
       ];
 
-
       setSchedule(mockSchedule);
     } catch (err) {
       console.error('Failed to fetch schedule:', err);
@@ -134,10 +133,10 @@ export default function FmScreen() {
     }
   };
 
-   useEffect(() => {
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- standard fetch-on-mount pattern; fetchSchedule's own setState calls are intentional here.
-  fetchSchedule();
-}, []);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- standard fetch-on-mount pattern; fetchSchedule's own setState calls are intentional here.
+    fetchSchedule();
+  }, []);
 
   const statusCopy = playbackError
     ? playbackError
@@ -321,7 +320,11 @@ export default function FmScreen() {
         ) : /* STATE 3: Generic error */
         scheduleError ? (
           <View style={styles.stateContainer} accessibilityLiveRegion="polite">
-            <Ionicons name="alert-circle-outline" size={40} color={swahilipotFmColors.accent[600]} />
+            <Ionicons
+              name="alert-circle-outline"
+              size={40}
+              color={swahilipotFmColors.accent[600]}
+            />
             <ThemedText style={styles.stateText}>{scheduleError}</ThemedText>
             <Pressable
               onPress={fetchSchedule}
