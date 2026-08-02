@@ -124,11 +124,6 @@ export default function FmScreen() {
         },
       ];
 
-      // --- DEV TESTING TIPS (remove or comment out before merging) ---
-      // To test EMPTY state:            setSchedule([]); return;
-      // To test OFFLINE state:           setIsOffline(true); setScheduleError('No internet connection.'); return;
-      // To test generic ERROR state:     setScheduleError('Unable to reach the schedule server.'); return;
-      // -----------------------------------------------------------
 
       setSchedule(mockSchedule);
     } catch (err) {
@@ -139,9 +134,10 @@ export default function FmScreen() {
     }
   };
 
-  useEffect(() => {
-    fetchSchedule();
-  }, []);
+   useEffect(() => {
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- standard fetch-on-mount pattern; fetchSchedule's own setState calls are intentional here.
+  fetchSchedule();
+}, []);
 
   const statusCopy = playbackError
     ? playbackError
