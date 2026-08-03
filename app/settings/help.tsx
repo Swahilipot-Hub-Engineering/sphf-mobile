@@ -25,9 +25,9 @@ export default function HelpScreen() {
   return (
     <ThemedView style={styles.page}>
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <ThemedText style={styles.title}>Help and onboarding</ThemedText>
+        <ThemedText style={styles.title}>Help</ThemedText>
         <ThemedText style={[styles.subtitle, { color: mutedTextColor }]}>
-          Use this checklist to get started quickly and find support when you need it.
+          Use this checklist to explore the app and find support when you need it.
         </ThemedText>
 
         <View

@@ -1,14 +1,14 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-navigation';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AppPreferencesProvider } from '@/components/AppPreferences';
+import { AppPreferencesProvider, useAppPreferences } from '@/components/AppPreferences';
 import PlayerProvider from '@/components/AudioPlayer';
 import FloatingPlayer from '@/components/FloatingPlayer';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -63,16 +63,30 @@ function RootLayoutNav() {
 
 function RootLayoutContent() {
   const colorScheme = useColorScheme();
+  const pathname = usePathname();
+  const { ready, hasCompletedOnboarding } = useAppPreferences();
+
+  if (!ready) {
+    return <View style={{ flex: 1 }} />;
+  }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <PlayerProvider>
         <View style={{ flex: 1 }}>
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+            <Stack.Protected guard={hasCompletedOnboarding}>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="settings" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="+not-found" />
+            </Stack.Protected>
+            <Stack.Screen
+              name="onboarding"
+              options={{ headerShown: false, gestureEnabled: false }}
+            />
           </Stack>
-          <FloatingPlayer />
+          {pathname === '/onboarding' ? null : <FloatingPlayer />}
         </View>
       </PlayerProvider>
     </ThemeProvider>

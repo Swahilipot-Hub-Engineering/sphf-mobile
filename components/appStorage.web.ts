@@ -2,10 +2,14 @@ export type ThemePreference = 'system' | 'light' | 'dark';
 
 export type PersistedPreferences = {
   themePreference: ThemePreference;
+  onboardingVersion: number;
 };
+
+export const CURRENT_ONBOARDING_VERSION = 1;
 
 export const DEFAULT_PREFERENCES: PersistedPreferences = {
   themePreference: 'system',
+  onboardingVersion: 0,
 };
 
 export const STORAGE_KEYS = {
@@ -67,18 +71,24 @@ const readKey = async (key: string): Promise<string | null> => {
   return memoryStorage.get(key) ?? null;
 };
 
-const writeKey = async (key: string, value: string): Promise<void> => {
+const writeKey = async (key: string, value: string, requireDurable = false): Promise<void> => {
   const storage = getWebStorage();
   if (storage && canUseWebStorage()) {
     try {
       storage.setItem(key, value);
       return;
     } catch {
+      if (requireDurable) {
+        throw new Error('Durable app storage is unavailable.');
+      }
       memoryStorage.set(key, value);
       return;
     }
   }
 
+  if (requireDurable) {
+    throw new Error('Durable app storage is unavailable.');
+  }
   memoryStorage.set(key, value);
 };
 
@@ -120,6 +130,9 @@ const listKeys = async (): Promise<string[]> => {
 const isThemePreference = (value: unknown): value is ThemePreference =>
   value === 'system' || value === 'light' || value === 'dark';
 
+const isOnboardingVersion = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0;
+
 const parsePreferences = (raw: string | null): PersistedPreferences => {
   if (!raw) {
     return DEFAULT_PREFERENCES;
@@ -131,6 +144,9 @@ const parsePreferences = (raw: string | null): PersistedPreferences => {
       themePreference: isThemePreference(parsed.themePreference)
         ? parsed.themePreference
         : DEFAULT_PREFERENCES.themePreference,
+      onboardingVersion: isOnboardingVersion(parsed.onboardingVersion)
+        ? parsed.onboardingVersion
+        : DEFAULT_PREFERENCES.onboardingVersion,
     };
   } catch {
     return DEFAULT_PREFERENCES;
@@ -142,8 +158,11 @@ export const getStoredPreferences = async (): Promise<PersistedPreferences> => {
   return parsePreferences(raw);
 };
 
-export const setStoredPreferences = async (next: PersistedPreferences): Promise<void> => {
-  await writeKey(STORAGE_KEYS.preferences, JSON.stringify(next));
+export const setStoredPreferences = async (
+  next: PersistedPreferences,
+  options?: { requireDurable?: boolean }
+): Promise<void> => {
+  await writeKey(STORAGE_KEYS.preferences, JSON.stringify(next), options?.requireDurable ?? false);
 };
 
 export const createCacheKey = (name: string): string => `${STORAGE_PREFIXES.cache}${name}`;
