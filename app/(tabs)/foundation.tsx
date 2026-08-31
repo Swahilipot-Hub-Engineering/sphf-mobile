@@ -7,7 +7,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { V_PADDING, H_PADDING, GAP } from '.';
 import { Text as ThemedText, View as ThemedView, useThemeColor } from '@/components/Themed';
 import { openExternalLink, type LinkKind } from '@/components/events/links';
-import { radius, spacing, typography } from '@/theme';
+import { radius, sphfColors, spacing, typography } from '@/theme';
 
 const CONTACT = {
   website: 'https://www.swahilipothub.co.ke',
@@ -123,6 +123,10 @@ export default function FoundationScreen() {
   const cardBackgroundColor = useThemeColor({ light: '#ffffff', dark: '#0f172a' }, 'background');
   const mutedTextColor = useThemeColor({ light: '#475569', dark: '#cbd5e1' }, 'text');
   const tintColor = useThemeColor({ light: '#306eb7', dark: '#93c5fd' }, 'tint');
+  const onTintColor = useThemeColor(
+    { light: sphfColors.text.inverseLight, dark: sphfColors.text.inverseDark },
+    'text'
+  );
   const cardStyle = { borderColor: cardBorderColor, backgroundColor: cardBackgroundColor };
 
   const [linkBusyKey, setLinkBusyKey] = useState<string | null>(null);
@@ -191,7 +195,7 @@ export default function FoundationScreen() {
                 key={program.name}
                 accessibilityRole="button"
                 accessibilityLabel={`${program.name}. ${program.description} Opens the program page in your browser.`}
-                disabled={linkBusyKey === program.name}
+                disabled={linkBusyKey !== null}
                 style={({ pressed }) => [
                   styles.programRow,
                   index > 0 ? [styles.rowDivider, { borderTopColor: cardBorderColor }] : null,
@@ -208,6 +212,7 @@ export default function FoundationScreen() {
               </Pressable>
             ))}
           </View>
+          {linkError ? <ThemedText style={styles.errorText}>{linkError}</ThemedText> : null}
         </Section>
 
         <Section title="Impact">
@@ -230,7 +235,7 @@ export default function FoundationScreen() {
                 key={row.key}
                 accessibilityRole="button"
                 accessibilityLabel={row.label}
-                disabled={linkBusyKey === row.key}
+                disabled={linkBusyKey !== null}
                 style={({ pressed }) => [
                   styles.contactRow,
                   index > 0 ? [styles.rowDivider, { borderTopColor: cardBorderColor }] : null,
@@ -259,8 +264,8 @@ export default function FoundationScreen() {
                 pressed ? styles.rowPressed : null,
               ]}
               onPress={() => router.push('/events')}>
-              <Ionicons name="calendar-outline" size={18} color="#ffffff" />
-              <ThemedText style={[styles.buttonLabel, { color: '#ffffff' }]}>
+              <Ionicons name="calendar-outline" size={18} color={onTintColor} />
+              <ThemedText style={[styles.buttonLabel, { color: onTintColor }]}>
                 View events
               </ThemedText>
             </Pressable>
