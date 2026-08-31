@@ -12,6 +12,7 @@ import { AppPreferencesProvider, useAppPreferences } from '@/components/AppPrefe
 import PlayerProvider from '@/components/AudioPlayer';
 import FloatingPlayer from '@/components/FloatingPlayer';
 import { useColorScheme } from '@/components/useColorScheme';
+import { appColors } from '@/theme';
 
 import '../global.css';
 
@@ -67,7 +68,7 @@ function RootLayoutContent() {
   const { ready, hasCompletedOnboarding } = useAppPreferences();
 
   if (!ready) {
-    return <View style={{ flex: 1 }} />;
+    return <View style={{ flex: 1, backgroundColor: appColors[colorScheme].background }} />;
   }
 
   return (

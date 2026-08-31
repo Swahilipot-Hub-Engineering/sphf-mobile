@@ -87,7 +87,11 @@ export function AppPreferencesProvider({ children }: { children: React.ReactNode
       ...preferences,
       onboardingVersion: CURRENT_ONBOARDING_VERSION,
     };
-    await setStoredPreferences(updated, { requireDurable: true });
+    try {
+      await setStoredPreferences(updated, { requireDurable: true });
+    } catch (error) {
+      console.warn('[AppPreferences] Failed to durably persist onboarding completion', error);
+    }
     setPreferences(updated);
   }, [preferences]);
 

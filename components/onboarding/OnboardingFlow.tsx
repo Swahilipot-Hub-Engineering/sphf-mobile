@@ -34,6 +34,7 @@ export default function OnboardingFlow({ onExit }: OnboardingFlowProps) {
   const colors = appColors[colorScheme];
   const illustrationBackground =
     colorScheme === 'dark' ? slide.darkBackground : slide.lightBackground;
+  const errorColor = colorScheme === 'dark' ? '#ef4444' : '#b91c1c';
 
   useEffect(() => {
     if (currentIndex > 0) {
@@ -144,7 +145,7 @@ export default function OnboardingFlow({ onExit }: OnboardingFlowProps) {
           </View>
 
           {errorMessage ? (
-            <Text accessibilityRole="alert" style={styles.errorText}>
+            <Text accessibilityRole="alert" style={[styles.errorText, { color: errorColor }]}>
               {errorMessage}
             </Text>
           ) : null}
@@ -292,7 +293,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   errorText: {
-    color: '#b91c1c',
     fontSize: 14,
     lineHeight: 20,
     textAlign: 'center',
