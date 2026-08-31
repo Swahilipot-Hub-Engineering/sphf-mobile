@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { useColorScheme as useSystemColorScheme } from 'react-native';
 
 import {
+  CURRENT_ONBOARDING_VERSION,
   DEFAULT_PREFERENCES,
   clearCacheNamespace,
   getStoredPreferences,
@@ -12,7 +13,9 @@ import {
 
 type AppPreferencesContextValue = PersistedPreferences & {
   colorScheme: 'light' | 'dark';
+  hasCompletedOnboarding: boolean;
   ready: boolean;
+  completeOnboarding: () => Promise<void>;
   setThemePreference: (next: ThemePreference) => Promise<void>;
   clearContentCache: () => Promise<number>;
 };
@@ -20,7 +23,9 @@ type AppPreferencesContextValue = PersistedPreferences & {
 const defaultContext: AppPreferencesContextValue = {
   ...DEFAULT_PREFERENCES,
   colorScheme: 'light',
+  hasCompletedOnboarding: false,
   ready: false,
+  completeOnboarding: async () => {},
   setThemePreference: async () => {},
   clearContentCache: async () => 0,
 };
@@ -77,17 +82,40 @@ export function AppPreferencesProvider({ children }: { children: React.ReactNode
     });
   }, []);
 
+  const completeOnboarding = useCallback(async () => {
+    const updated = {
+      ...preferences,
+      onboardingVersion: CURRENT_ONBOARDING_VERSION,
+    };
+    try {
+      await setStoredPreferences(updated, { requireDurable: true });
+    } catch (error) {
+      console.warn('[AppPreferences] Failed to durably persist onboarding completion', error);
+    }
+    setPreferences(updated);
+  }, [preferences]);
+
   const colorScheme = resolveColorScheme(preferences.themePreference, systemColorScheme);
+  const hasCompletedOnboarding = preferences.onboardingVersion >= CURRENT_ONBOARDING_VERSION;
 
   const value = useMemo<AppPreferencesContextValue>(
     () => ({
       ...preferences,
       colorScheme,
+      hasCompletedOnboarding,
       ready,
+      completeOnboarding,
       setThemePreference,
       clearContentCache: clearCacheNamespace,
     }),
-    [preferences, colorScheme, ready, setThemePreference]
+    [
+      preferences,
+      colorScheme,
+      hasCompletedOnboarding,
+      ready,
+      completeOnboarding,
+      setThemePreference,
+    ]
   );
 
   return <AppPreferencesContext.Provider value={value}>{children}</AppPreferencesContext.Provider>;

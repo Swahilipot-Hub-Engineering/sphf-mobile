@@ -285,10 +285,24 @@ export default function SettingsScreen() {
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Open help and onboarding"
+            accessibilityLabel="Replay app onboarding"
+            style={({ pressed }) => [styles.linkRow, pressed ? styles.buttonPressed : null]}
+            onPress={() =>
+              router.push({
+                pathname: '/onboarding',
+                params: { source: 'settings' },
+              })
+            }>
+            <ThemedText style={styles.rowTitle}>Onboarding</ThemedText>
+            <ThemedText style={[styles.rowValue, { color: mutedTextColor }]}>Replay</ThemedText>
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Open help"
             style={({ pressed }) => [styles.linkRow, pressed ? styles.buttonPressed : null]}
             onPress={() => router.push('/settings/help')}>
-            <ThemedText style={styles.rowTitle}>Help and onboarding</ThemedText>
+            <ThemedText style={styles.rowTitle}>Help</ThemedText>
             <ThemedText style={[styles.rowValue, { color: mutedTextColor }]}>Open</ThemedText>
           </Pressable>
 

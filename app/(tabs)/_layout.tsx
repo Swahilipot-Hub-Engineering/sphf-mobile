@@ -17,6 +17,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
+  const headerShown = useClientOnlyValue(false, true);
 
   return (
     <Tabs
@@ -24,7 +25,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
         tabBarInactiveTintColor: Colors[colorScheme].tabIconDefault,
-        headerShown: useClientOnlyValue(false, true),
+        headerShown,
         tabBarStyle: {
           backgroundColor: Colors[colorScheme].background,
         },
