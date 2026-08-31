@@ -49,15 +49,16 @@ export default function FmScreen() {
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
   const [scheduleLoading, setScheduleLoading] = useState(true);
   const [scheduleError, setScheduleError] = useState<string | null>(null);
-  const [isOffline, setIsOffline] = useState(false);
 
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as DayKey;
+  const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+    .toLocaleDateString('en-US', { weekday: 'long' })
+    .toLowerCase() as DayKey;
   const [selectedDay, setSelectedDay] = useState<DayKey>(today);
 
   const fetchSchedule = async () => {
     setScheduleLoading(true);
     setScheduleError(null);
-    setIsOffline(false);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -138,15 +139,13 @@ export default function FmScreen() {
     fetchSchedule();
   }, []);
 
-  const statusCopy = playbackError
-    ? playbackError
-    : isLoading
-      ? 'Connecting to the studio feed...'
-      : playingLive
-        ? 'Live — Swahilipot FM'
-        : isCurrentStream
-          ? 'Stream idle. Tap play to listen live.'
-          : 'Another audio source is active. Stop it to tune in here.';
+  const statusCopy = isLoading
+    ? 'Connecting to the studio feed...'
+    : playingLive
+      ? 'Live — Swahilipot FM'
+      : isCurrentStream
+        ? 'Stream idle. Tap play to listen live.'
+        : 'Another audio source is active. Stop it to tune in here.';
 
   const handlePrimaryAction = () => {
     void togglePlayback(FM_STREAM);
@@ -167,9 +166,12 @@ export default function FmScreen() {
 
   const currentShow =
     currentSlotIndex >= 0 ? schedule[currentSlotIndex][today as keyof ScheduleItem] : null;
+  const isLastSlotOfDay = currentSlotIndex === schedule.length - 1;
   const nextShow =
     currentSlotIndex >= 0 && schedule.length > 0
-      ? schedule[(currentSlotIndex + 1) % schedule.length][today as keyof ScheduleItem]
+      ? schedule[(currentSlotIndex + 1) % schedule.length][
+          (isLastSlotOfDay ? tomorrow : today) as keyof ScheduleItem
+        ]
       : null;
 
   return (
@@ -202,9 +204,7 @@ export default function FmScreen() {
 
       {/* Now Playing card — buttons unchanged from original */}
       <View style={styles.nowPlayingCard}>
-        <ThemedText style={[styles.cardBody, playbackError ? styles.streamErrorText : null]}>
-          {statusCopy}
-        </ThemedText>
+        <ThemedText style={styles.cardBody}>{statusCopy}</ThemedText>
 
         <View style={styles.controls}>
           <Pressable
@@ -302,22 +302,7 @@ export default function FmScreen() {
             <ActivityIndicator size="large" color={appColors.light.textSecondary} />
             <ThemedText style={styles.stateText}>Loading today&apos;s programming…</ThemedText>
           </View>
-        ) : /* STATE 2: Offline */
-        scheduleError && isOffline ? (
-          <View style={styles.stateContainer} accessibilityLiveRegion="polite">
-            <Ionicons name="cloud-offline-outline" size={40} color={appColors.light.textMuted} />
-            <ThemedText style={styles.stateText}>
-              You&apos;re offline. Showing may be out of date.
-            </ThemedText>
-            <Pressable
-              onPress={fetchSchedule}
-              style={styles.retryButton}
-              accessibilityRole="button"
-              accessibilityLabel="Retry loading the schedule">
-              <ThemedText style={styles.retryButtonLabel}>Tap to retry</ThemedText>
-            </Pressable>
-          </View>
-        ) : /* STATE 3: Generic error */
+        ) : /* STATE 2: Error */
         scheduleError ? (
           <View style={styles.stateContainer} accessibilityLiveRegion="polite">
             <Ionicons
@@ -334,7 +319,7 @@ export default function FmScreen() {
               <ThemedText style={styles.retryButtonLabel}>Tap to retry</ThemedText>
             </Pressable>
           </View>
-        ) : /* STATE 4: Empty */
+        ) : /* STATE 3: Empty */
         schedule.length === 0 ? (
           <View style={styles.stateContainer}>
             <Ionicons name="calendar-clear-outline" size={40} color={appColors.light.textMuted} />
@@ -468,9 +453,6 @@ const styles = StyleSheet.create({
   helperText: {
     fontSize: typography.size.xs,
     color: appColors.light.textMuted,
-  },
-  streamErrorText: {
-    color: swahilipotFmColors.accent[500],
   },
   liveBadge: {
     flexDirection: 'row',
